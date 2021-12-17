@@ -26,6 +26,16 @@ namespace SceneProvider
             Debug.Log(obj[0]);
         }
 
+        private static SceneData _instance;
+
+        [SerializeField]
+        private Material defaultMaterial;
+
+        private void Start()
+        {
+            _instance = this;
+        }
+
         public void Update()
         {
             if (ExecutionQueue.Count > 0)
@@ -49,7 +59,7 @@ namespace SceneProvider
             boxCollider.center = meshFilter.mesh.bounds.center;
             boxCollider.size = meshFilter.mesh.bounds.size;
 
-            go.AddComponent<MeshRenderer>();
+            go.AddComponent<MeshRenderer>().sharedMaterial = _instance.defaultMaterial;
         }
     }
 }
