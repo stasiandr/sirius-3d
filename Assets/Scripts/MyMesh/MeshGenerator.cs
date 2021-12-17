@@ -9,6 +9,7 @@ namespace MyMesh
         public static MyMesh GenerateCube()
         {
             MyMesh m = new MyMesh();
+            m.Vertices = new List<Vector3>();
             for (int x = 0; x <= 1; ++x)
                 for (int y = 0; y <= 1; ++y)
                     for (int z = 0; z <= 1; ++z)

@@ -7,7 +7,7 @@ namespace SceneProvider
 {
     public class SceneData : MonoBehaviour
     {
-        public static Queue<ICommand> ExecutionQueue;
+        public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
 
         public void Start()
         {

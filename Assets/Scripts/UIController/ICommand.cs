@@ -10,8 +10,8 @@ namespace UIController
     {
         void ICommand.Apply()
         {
-            var m = MyMesh.MeshGenerator.GenerateCube();
-            //SceneData.CreateMesh(m);
+            MyMesh.MyMesh m = MyMesh.MeshGenerator.GenerateCube();
+            SceneProvider.SceneData.CreateMesh(m);
         }
         void ICommand.Revert()
         {
