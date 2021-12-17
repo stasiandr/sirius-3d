@@ -10,7 +10,17 @@ namespace SceneProvider
     public class SceneData : MonoBehaviour
     {
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
-        
+
+        private static SceneData _instance;
+
+        [SerializeField]
+        private Material defaultMaterial;
+
+        private void Start()
+        {
+            _instance = this;
+        }
+
         public void Update()
         {
             if (ExecutionQueue.Count > 0)
@@ -28,8 +38,8 @@ namespace SceneProvider
             };
 
             go.AddComponent<MeshFilter>().mesh = mesh.ToUnityMesh();
-            
-            go.AddComponent<MeshRenderer>();
+
+            go.AddComponent<MeshRenderer>().sharedMaterial = _instance.defaultMaterial;
         }
     }
 }
