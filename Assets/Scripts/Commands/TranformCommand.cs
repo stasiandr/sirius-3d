@@ -11,9 +11,9 @@ namespace Commands
         Vector3 Trans;
         List<GameObject> Objects;
 
-        TransformCommand(Vector3 trans = default)
+        public TransformCommand(List<GameObject> targets, Vector3 trans = default)
         {
-            Objects = new List<GameObject>(); //SceneData.Targets;
+            Objects = targets;
             Trans = trans;
         }
 
