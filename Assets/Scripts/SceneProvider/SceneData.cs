@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using CameraClickController;
 using Commands;
 using MeshTools;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace SceneProvider
@@ -10,11 +9,7 @@ namespace SceneProvider
     public class SceneData : MonoBehaviour
     {
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
-
-        public static class Selection
-        {
-            public static GameObject Target;
-        }
+        public static List<GameObject> Targets = new List<GameObject>();
 
         public void OnEnable()
         {
@@ -23,13 +18,30 @@ namespace SceneProvider
 
         private void CameraSelectControllerOnObjectsSelected(List<Collider> obj)
         {
-            Debug.Log(obj[0]);
+            foreach (var target in Targets)
+            {
+                target.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
+            }
+            
+            Targets = new List<GameObject>();
+
+            foreach (var col in obj)
+            {
+                Targets.Add(col.gameObject);
+            }
+
+            foreach (var target in Targets)
+            {
+                target.GetComponent<MeshRenderer>().sharedMaterial = selectedMaterial;
+            }
+            
+            Debug.Log(Targets);
         }
 
         private static SceneData _instance;
 
-        [SerializeField]
-        private Material defaultMaterial;
+        public Material defaultMaterial;
+        public Material selectedMaterial;
 
         private void Start()
         {
