@@ -21,5 +21,13 @@ namespace MeshTools
             
             return mesh;
         }
+
+
+        public void AddTriangle(int i0, int i1, int i2)
+        {
+            this.Triangles.Add(i0);
+            this.Triangles.Add(i1);
+            this.Triangles.Add(i2);
+        }
     }
 }
