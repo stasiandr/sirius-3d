@@ -12,11 +12,14 @@ namespace Commands
         public Vector3 Scale;
         public int Details;
         public int Details2;
-        public CreatePrimitiveCommand(string meshType)
+        public CreatePrimitiveCommand(string meshType, Vector3 pos = default, Vector3 scale = default)
         {
             MeshType = meshType;
-            Pos = Vector3.zero;
-            Scale = Vector3.one;
+            Pos = pos;
+            if (scale == default)
+                Scale = Vector3.one;
+            else
+                Scale = scale;
             Details = 10;
             Details2 = 10;
         }
