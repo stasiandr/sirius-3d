@@ -129,6 +129,29 @@ namespace MeshTools
 
             return mesh;
         }
+
+        public static MyMesh GenerateCone(float height = 2, double radius = 1, int vertexCount = 100)
+        {
+            var foundation = GenerateCircle(true, 0, vertexCount, radius);
+            var topVertex = new Vector3(0, height, 0);
+
+            var mesh = new MyMesh
+            {
+                Vertices = foundation.Vertices,
+                Triangles = foundation.Triangles
+            };
+
+            int topVertexIndex = mesh.Vertices.Count;
+            mesh.Vertices.Add(topVertex);
+
+            for (int firstVertex = 0; firstVertex < vertexCount; ++firstVertex)
+            {
+                int secondVertex = GetNextPosition(firstVertex, vertexCount);
+                mesh.AddTriangle(topVertexIndex, secondVertex, firstVertex);
+            }
+
+            return mesh;
+        }
     }
 }
 
