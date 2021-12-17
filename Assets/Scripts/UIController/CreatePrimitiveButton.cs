@@ -10,17 +10,32 @@ namespace UIController
 
         public void CreatePrimitiveByID(int id)
         {
-            throw new NotImplementedException();
+            switch(id)
+            {
+                case 0:
+                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Cube"));
+                    break;
+                case 1:
+                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Sphere"));
+                    break;
+                case 2:
+                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Cone"));
+                    break;
+                case 3:
+                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Cylinder"));
+                    break;
+                case 4:
+                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Torus"));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
         }
         
         public void CreateCube()
         {
-            SceneData.ExecutionQueue.Enqueue(new CreateCubeCommand());
-        }
-
-        public void CreateSphere()
-        {
-            throw new NotImplementedException();
+            
         }
     }
 }

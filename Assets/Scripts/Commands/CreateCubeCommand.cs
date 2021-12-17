@@ -4,7 +4,7 @@ using SceneProvider;
 
 namespace Commands
 {
-    public class CreateCubeCommand : ICommand
+    public struct CreateCubeCommand : ICommand
     {
         public void Apply()
         {
