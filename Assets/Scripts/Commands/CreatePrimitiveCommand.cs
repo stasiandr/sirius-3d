@@ -44,9 +44,8 @@ namespace Commands
                     //mesh = MeshGenerator.GenerateCylinder(Pos, Scale.x, Scale.y, Details);
                     //break;
                 case "Torus":
-                    throw new NotImplementedException();
-                    //mesh = MeshGenerator.GenerateTorus(Pos, Scale.x, Scale.y, Scale.z, Details1, Details2);
-                    //break;
+                    mesh = MeshGenerator.GenerateTorus(/*Pos, Scale.x, Scale.y, Details, Details2*/);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
