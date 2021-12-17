@@ -1,12 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Commands;
+using SceneProvider;
 using UnityEngine;
 
-public class CreatePrimitiveButton : MonoBehaviour
+namespace UIController
 {
-    // Start is called before the first frame update
-    public void OnClick()
+    public class CreatePrimitiveButton : MonoBehaviour
     {
-        SceneProvider.SceneData.ExecutionQueue.Enqueue(new UIController.CreateCubeCommand());
+
+        public void CreatePrimitiveByID(int id)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public void CreateCube()
+        {
+            SceneData.ExecutionQueue.Enqueue(new CreateCubeCommand());
+        }
+
+        public void CreateSphere()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
