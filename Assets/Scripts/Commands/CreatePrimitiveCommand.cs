@@ -32,9 +32,8 @@ namespace Commands
                     mesh = MeshGenerator.GenerateCube(/*Pos, Scale*/);
                     break;
                 case "Sphere":
-                    throw new NotImplementedException();
-                    //mesh = MeshGenerator.GenerateSphere(Pos, Scale.x);
-                    //break;
+                    mesh = SphereGenerator.GenerateSphere(100, 100);
+                    break;
                 case "Cone":
                     throw new NotImplementedException();
                     //mesh = MeshGenerator.GenerateCone(Pos, Scale.x, Scale.y, Details);
