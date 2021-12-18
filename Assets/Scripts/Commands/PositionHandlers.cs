@@ -4,20 +4,22 @@ using UnityEngine;
 using Commands;
 using SceneProvider;
 using System.Linq;
+using System;
 
 public class PositionHandlers : MonoBehaviour
 {
     Vector3 MyDir;
     public string handlesLayerName = "handles";
     Vector3 StartPos;
+    Dictionary<int, Vector3> ObjStartPos = new Dictionary<int, Vector3>();
     Vector3 EndPos;
     Vector3 StartMousePos;
     bool selected = false;
     void Update()
     {
+        transform.localScale = Vector3.one * (transform.position - (new Plane(Camera.main.transform.forward, Camera.main.transform.position).ClosestPointOnPlane(transform.position))).magnitude;
         if (!selected)
         {
-            transform.localScale = Vector3.one * (Camera.main.transform.position - transform.position).magnitude;
             if (SceneData.Targets.Count == 0) {
                 //Hide
                 //to do:         normal hide
@@ -46,6 +48,10 @@ public class PositionHandlers : MonoBehaviour
             RayCast();
         }
         if (selected) {
+            foreach (var obj in SceneData.Targets)
+            {
+                obj.transform.position = ObjStartPos[Convert.ToInt32(obj.name)] + GetMousePoint() - StartMousePos;
+            }
             transform.position = StartPos + GetMousePoint() - StartMousePos;
         }
     }
@@ -72,6 +78,10 @@ public class PositionHandlers : MonoBehaviour
             StartPos = transform.position;
             selected = true;
             StartMousePos = GetMousePoint();
+            foreach (var obj in SceneData.Targets)
+            {
+                ObjStartPos[Convert.ToInt32(obj.name)] = obj.transform.position;
+            }
         }
     }
 
@@ -97,6 +107,10 @@ public class PositionHandlers : MonoBehaviour
 
     void Release()
     {
+        foreach (var obj in SceneData.Targets)
+        {
+            obj.transform.position = ObjStartPos[Convert.ToInt32(obj.name)];
+        }
         selected = false;
         EndPos = transform.position;
         SceneData.ExecutionQueue.Enqueue(new TransformCommand(SceneData.Targets, EndPos - StartPos));
