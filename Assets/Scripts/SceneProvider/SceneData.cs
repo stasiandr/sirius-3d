@@ -4,6 +4,7 @@ using CameraClickController;
 using Commands;
 using MeshTools;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace SceneProvider
 {
@@ -73,9 +74,7 @@ namespace SceneProvider
             var meshFilter = go.AddComponent<MeshFilter>();
             meshFilter.mesh = mesh.ToUnityMesh();
 
-            var boxCollider = go.AddComponent<BoxCollider>();
-            boxCollider.center = meshFilter.mesh.bounds.center;
-            boxCollider.size = meshFilter.mesh.bounds.size;
+            var meshCollider = go.AddComponent<MeshCollider>();
 
             go.AddComponent<MeshRenderer>().sharedMaterial = _instance.defaultMaterial;
         }
