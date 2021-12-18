@@ -35,13 +35,11 @@ namespace Commands
                     mesh = SphereGenerator.GenerateSphere(100, 100);
                     break;
                 case "Cone":
-                    throw new NotImplementedException();
-                    //mesh = MeshGenerator.GenerateCone(Pos, Scale.x, Scale.y, Details);
-                    //break;
+                    mesh = MeshGenerator.GenerateCone(/*Height, Radius, VertexCount*/);
+                    break;
                 case "Cylinder":
-                    throw new NotImplementedException();
-                    //mesh = MeshGenerator.GenerateCylinder(Pos, Scale.x, Scale.y, Details);
-                    //break;
+                    mesh = MeshGenerator.GenerateCylinder(/*Height, Radius, VertexCount*/);
+                    break;
                 case "Torus":
                     mesh = MeshGenerator.GenerateTorus(/*Pos, Scale.x, Scale.y, Details, Details2*/);
                     break;

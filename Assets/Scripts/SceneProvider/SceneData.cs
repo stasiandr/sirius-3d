@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CameraClickController;
 using Commands;
 using MeshTools;
@@ -18,10 +19,10 @@ namespace SceneProvider
 
         private void CameraSelectControllerOnObjectsSelected(List<Collider> obj)
         {
-            foreach (var target in Targets)
+            foreach (var target in Targets.Where(target => target != null))
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
-            }
+            }   
             
             Targets = new List<GameObject>();
 
