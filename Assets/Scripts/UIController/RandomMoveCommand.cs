@@ -8,6 +8,15 @@ namespace UIController
     public class RandomMoveCommand : MonoBehaviour
     {
 
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                RandomMove(1f);
+            }
+        }
+
+
         public void RandomMove(float max_delta)
         {
             float new_x = UnityEngine.Random.Range(-max_delta, max_delta);

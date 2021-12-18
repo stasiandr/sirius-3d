@@ -24,10 +24,12 @@ namespace SceneProvider
             foreach (var target in Targets.Where(target => target != null))
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
-            }   
-            
+            }
             Targets = new List<GameObject>();
-
+            if (obj == null)
+            {
+                return;
+            }
             foreach (var col in obj.Where(col => col != null))
             {
                 Targets.Add(col.gameObject);
@@ -37,8 +39,6 @@ namespace SceneProvider
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = selectedMaterial;
             }
-            
-            Debug.Log(Targets);
         }
 
         private static SceneData _instance;
@@ -49,6 +49,9 @@ namespace SceneProvider
         private void Start()
         {
             _instance = this;
+            Targets = new List<GameObject>();
+            NewObjID = 0;
+            ObjectsByID = new Dictionary<int, GameObject>();
         }
 
         public void Update()
@@ -63,8 +66,8 @@ namespace SceneProvider
         {
             var go = new GameObject
             {
-                name = "Cube",
-                layer = LayerMask.NameToLayer("Handles")
+                name = "" + NewObjID,
+                layer = LayerMask.NameToLayer("Objects")
             };
 
             var meshFilter = go.AddComponent<MeshFilter>();
