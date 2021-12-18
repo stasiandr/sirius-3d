@@ -4,7 +4,6 @@ using CameraClickController;
 using Commands;
 using MeshTools;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace SceneProvider
 {
