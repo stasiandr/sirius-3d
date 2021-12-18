@@ -26,6 +26,11 @@ namespace SceneProvider
             
             Targets = new List<GameObject>();
 
+            if (obj == null)
+            {
+                return;
+            }
+
             foreach (var col in obj.Where(col => col != null))
             {
                 Targets.Add(col.gameObject);
