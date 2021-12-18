@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CameraClickController;
@@ -11,7 +12,8 @@ namespace SceneProvider
     {
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
-
+        public static event Action<List<GameObject>> ObjectsSelected;
+        
         public void OnEnable()
         {
             CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
@@ -40,7 +42,8 @@ namespace SceneProvider
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = selectedMaterial;
             }
-            
+
+            ObjectsSelected?.Invoke(Targets);
             Debug.Log(Targets);
         }
 
