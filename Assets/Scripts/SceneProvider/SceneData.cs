@@ -11,6 +11,8 @@ namespace SceneProvider
     {
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
+        static int NewObjID = 0;
+        public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
 
         public void OnEnable()
         {
@@ -73,6 +75,8 @@ namespace SceneProvider
             boxCollider.size = meshFilter.mesh.bounds.size;
 
             go.AddComponent<MeshRenderer>().sharedMaterial = _instance.defaultMaterial;
+            ObjectsByID[NewObjID] = go;
+            NewObjID++;
         }
     }
 }
