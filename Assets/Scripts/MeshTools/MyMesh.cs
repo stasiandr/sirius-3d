@@ -18,7 +18,7 @@ namespace MeshTools
             
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
-            
+
             return mesh;
         }
 
