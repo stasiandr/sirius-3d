@@ -7,7 +7,6 @@ namespace UIController
 {
     public class CreatePrimitiveButton : MonoBehaviour
     {
-
         public void CreatePrimitiveByID(int id)
         {
             switch(id)
@@ -27,15 +26,13 @@ namespace UIController
                 case 4:
                     SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Torus"));
                     break;
+                case 5:
+                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Plane"));
+                    break;
                 default:
                     throw new NotImplementedException();
             }
 
-        }
-        
-        public void CreateCube()
-        {
-            
         }
     }
 }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using CameraClickController;
 using Commands;
 using MeshTools;
@@ -10,7 +12,8 @@ namespace SceneProvider
     {
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
-
+        public static event Action<List<GameObject>> ObjectsSelected;
+        
         public void OnEnable()
         {
             CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
@@ -18,14 +21,19 @@ namespace SceneProvider
 
         private void CameraSelectControllerOnObjectsSelected(List<Collider> obj)
         {
-            foreach (var target in Targets)
+            foreach (var target in Targets.Where(target => target != null))
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
-            }
+            }   
             
             Targets = new List<GameObject>();
 
-            foreach (var col in obj)
+            if (obj == null)
+            {
+                return;
+            }
+
+            foreach (var col in obj.Where(col => col != null))
             {
                 Targets.Add(col.gameObject);
             }
@@ -34,7 +42,8 @@ namespace SceneProvider
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = selectedMaterial;
             }
-            
+
+            ObjectsSelected?.Invoke(Targets);
             Debug.Log(Targets);
         }
 
@@ -67,9 +76,7 @@ namespace SceneProvider
             var meshFilter = go.AddComponent<MeshFilter>();
             meshFilter.mesh = mesh.ToUnityMesh();
 
-            var boxCollider = go.AddComponent<BoxCollider>();
-            boxCollider.center = meshFilter.mesh.bounds.center;
-            boxCollider.size = meshFilter.mesh.bounds.size;
+            var meshCollider = go.AddComponent<MeshCollider>();
 
             go.AddComponent<MeshRenderer>().sharedMaterial = _instance.defaultMaterial;
         }
