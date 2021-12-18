@@ -43,6 +43,9 @@ namespace Commands
                 case "Torus":
                     mesh = MeshGenerator.GenerateTorus(/*Pos, Scale.x, Scale.y, Details, Details2*/);
                     break;
+                case "Plane":
+                    mesh = MeshGenerator.GeneratePlane();
+                    break;
                 default:
                     throw new NotImplementedException();
             }

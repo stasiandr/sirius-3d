@@ -193,6 +193,38 @@ namespace MeshTools
             }
             return mesh;
         }
+
+        public static MyMesh GeneratePlane(float length = 10, float height = 0, float width = 10)
+        {
+            var mesh = new MyMesh()
+            {
+                Vertices = new List<Vector3>(),
+                Triangles = new List<int>()
+            };
+
+            for (int x = -1; x <= 1; x += 2)
+            {
+                for (int z = -1; z <= 1; z += 2)
+                {
+                    mesh.Vertices.Add(new Vector3(x * length / 2, height, z * width / 2));
+                }
+            }
+
+            for (int x = -1; x <= 1; x += 2)
+            {
+                for (int z = -1; z <= 1; z += 2)
+                {
+                    mesh.Vertices.Add(new Vector3(x * length / 2, height - 0.0001f, z * width / 2));
+                }
+            }
+            
+            mesh.AddTriangle(0, 1, 3);
+            mesh.AddTriangle(0, 3, 2);
+            mesh.AddTriangle(7, 5, 4);
+            mesh.AddTriangle(6, 7, 4);
+
+            return mesh;
+        }
     }
 }
 
