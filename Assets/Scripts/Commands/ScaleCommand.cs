@@ -21,13 +21,16 @@ namespace Commands
         {
             foreach (var obj in Objects)
             {
-                obj.transform.localScale = Trans;
+                obj.transform.localScale = Vector3.Scale(obj.transform.localScale, Trans);
             }
         }
 
         public void Revert()
         {
-            throw new NotImplementedException();
+            foreach (var obj in Objects)
+            {
+                obj.transform.localScale = Vector3.Scale(obj.transform.localScale, new Vector3(1 / Trans.x, 1 / Trans.y, 1 / Trans.z));
+            }
         }
     }
 }

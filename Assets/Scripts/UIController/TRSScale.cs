@@ -33,32 +33,32 @@ namespace UIController
         }
         public void ScaleTargetsX(string s)
         {
-            if (!float.TryParse(s, out float newpos) || Targets.Count == 0 || Targets[0] == null)
+            if (!float.TryParse(s, out float newpos) || Targets.Count == 0 || newpos == 0)
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.ScaleCommand(Targets, new Vector3(newpos,
-                Targets[0].transform.localScale.y, Targets[0].transform.localScale.z)));
+            SceneData.ExecutionQueue.Enqueue(new Commands.ScaleCommand(Targets, 
+                new Vector3(newpos / Targets[0].transform.localScale.x, 1, 1)));
         }
 
         public void ScaleTargetsY(string s)
         {
-            if (!float.TryParse(s, out float newpos) || Targets.Count == 0 || Targets[0] == null)
+            if (!float.TryParse(s, out float newpos) || Targets.Count == 0 || newpos == 0)
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.ScaleCommand(Targets, new Vector3(Targets[0].transform.localScale.x,
-                newpos, Targets[0].transform.localScale.z)));
+            SceneData.ExecutionQueue.Enqueue(new Commands.ScaleCommand(Targets,
+                new Vector3(1, newpos / Targets[0].transform.localScale.y, 1)));
         }
 
         public void ScaleTargetsZ(string s)
         {
-            if (!float.TryParse(s, out float newpos) || Targets.Count == 0 || Targets[0] == null)
+            if (!float.TryParse(s, out float newpos) || Targets.Count == 0 || newpos == 0)
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.ScaleCommand(Targets, new Vector3(Targets[0].transform.localScale.x,
-                Targets[0].transform.localScale.y, newpos)));
+            SceneData.ExecutionQueue.Enqueue(new Commands.ScaleCommand(Targets,
+                new Vector3(1, 1, newpos / Targets[0].transform.localScale.z)));
         }
     }
 }
