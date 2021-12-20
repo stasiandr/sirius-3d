@@ -258,8 +258,8 @@ MonoBehaviour:
   SkyboxTexture: {fileID: 2800000, guid: ef0a5b998fd02194095b0837d45009c9, type: 3}
   DirectionalLight: {fileID: 1370055050}
   SphereRadius: {x: 3, y: 8}
-  SpheresMax: 40
-  SpherePlacementRadius: 40
+  SpheresMax: 100
+  SpherePlacementRadius: 100
 --- !u!114 &664158587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,7 +306,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0.8
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

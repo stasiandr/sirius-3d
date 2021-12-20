@@ -28,7 +28,7 @@ public class RayTracingMaster : MonoBehaviour
     private void OnEnable()
     {
         //_currentSample = 0;
-        //SetUpScene();
+        SetUpScene();
     }
     private void OnDisable()
     {
@@ -84,7 +84,7 @@ public class RayTracingMaster : MonoBehaviour
         RayTracingShader.SetTexture(0, "_SkyboxTexture", SkyboxTexture);
         RayTracingShader.SetMatrix("_CameraToWorld", _camera.cameraToWorldMatrix);
         RayTracingShader.SetMatrix("_CameraInverseProjection", _camera.projectionMatrix.inverse);
-        //RayTracingShader.SetBuffer(0, "_Spheres", _sphereBuffer);
+        RayTracingShader.SetBuffer(0, "_Spheres", _sphereBuffer);
     }
 
     private void Render(RenderTexture destination)
