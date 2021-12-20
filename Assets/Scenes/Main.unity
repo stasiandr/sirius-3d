@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 22596743}
   - component: {fileID: 22596742}
   m_Layer: 5
-  m_Name: Move button
+  m_Name: Undo button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -298,10 +298,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 22596742}
-        m_TargetAssemblyTypeName: UIController.RandomMoveCommand, Assembly-CSharp
-        m_MethodName: RandomMove
-        m_Mode: 4
+      - m_Target: {fileID: 871185482}
+        m_TargetAssemblyTypeName: SceneProvider.SceneData, Assembly-CSharp
+        m_MethodName: Undo
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2132,7 +2132,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Move Object
+  m_Text: Undo
 --- !u!222 &1704327264
 CanvasRenderer:
   m_ObjectHideFlags: 0
