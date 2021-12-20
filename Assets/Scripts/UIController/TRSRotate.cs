@@ -6,7 +6,7 @@ using SceneProvider;
 
 namespace UIController
 {
-    public class TRSTransform : MonoBehaviour
+    public class TRSRotate : MonoBehaviour
     {
         public InputField posX, posY, posZ;
         private List<GameObject> Targets;
@@ -27,41 +27,42 @@ namespace UIController
                 return;
             }
             var target = Targets[0];
-            posX.SetTextWithoutNotify(target.transform.position.x.ToString());
-            posY.SetTextWithoutNotify(target.transform.position.y.ToString());
-            posZ.SetTextWithoutNotify(target.transform.position.z.ToString());
+            posX.SetTextWithoutNotify(target.transform.rotation.eulerAngles.x.ToString());
+            posY.SetTextWithoutNotify(target.transform.rotation.eulerAngles.y.ToString());
+            posZ.SetTextWithoutNotify(target.transform.rotation.eulerAngles.z.ToString());
         }
 
-        public void TransformTargetsX(string s)
+        public void RotateTargetsX(string s)
         {
             if (!float.TryParse(s, out float newpos) || Targets.Count == 0)
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.TransformCommand(Targets, new Vector3(newpos -
-                Targets[0].transform.position.x, 0, 0)));
+            var angle = Targets[0].transform.rotation.eulerAngles;
+            SceneData.ExecutionQueue.Enqueue(new Commands.RotateCommand(Targets,
+                new Vector3(newpos - angle.x, 0, 0)));
         }
 
-        public void TransformTargetsY(string s)
+        public void RotateTargetsY(string s)
         {
             if (!float.TryParse(s, out float newpos) || Targets.Count == 0)
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.TransformCommand(Targets, new Vector3(0, newpos -
-                Targets[0].transform.position.y, 0)));
+            var angle = Targets[0].transform.rotation.eulerAngles;
+            SceneData.ExecutionQueue.Enqueue(new Commands.RotateCommand(Targets,
+                new Vector3(0, newpos - angle.y, 0)));
         }
 
-        public void TransformTargetsZ(string s)
+        public void RotateTargetsZ(string s)
         {
             if (!float.TryParse(s, out float newpos) || Targets.Count == 0)
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.TransformCommand(Targets, new Vector3(0, 0, newpos -
-                Targets[0].transform.position.z)));
+            var angle = Targets[0].transform.rotation.eulerAngles;
+            SceneData.ExecutionQueue.Enqueue(new Commands.RotateCommand(Targets,
+                new Vector3(0, 0, newpos - angle.z)));
         }
-
-
     }
 }

@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace Commands
 {
-    public struct ScaleCommand : ICommand
+    public struct RotateCommand : ICommand
     {
         Vector3 Trans;
         List<GameObject> Objects;
 
-        public ScaleCommand(List<GameObject> targets, Vector3 trans = default)
+        public RotateCommand(List<GameObject> targets, Vector3 trans = default)
         {
             Objects = targets;
             Trans = trans;
@@ -21,13 +21,16 @@ namespace Commands
         {
             foreach (var obj in Objects)
             {
-                obj.transform.localScale = Trans;
+                obj.transform.eulerAngles += Trans;
             }
         }
 
         public void Revert()
         {
-            throw new NotImplementedException();
+            foreach (var obj in Objects)
+            {
+                obj.transform.Rotate(-Trans, Space.World);
+            }
         }
     }
 }
