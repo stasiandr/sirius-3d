@@ -16,7 +16,7 @@ public class RayTracingMaster : MonoBehaviour
     public uint SpheresMax = 100;
     public float SpherePlacementRadius = 100.0f;
     private ComputeBuffer _sphereBuffer;
-
+    private ComputeBuffer _triangleBuffer;
     struct Sphere
     {
         public Vector3 position;
@@ -66,6 +66,9 @@ public class RayTracingMaster : MonoBehaviour
         // Assign to compute buffer
         _sphereBuffer = new ComputeBuffer(spheres.Count, 40);
         _sphereBuffer.SetData(spheres);
+        foreach (var obj in 
+        _triangleBuffer = new ComputeBuffer(spheres.Count, 40);
+        _triangleBuffer.SetData(spheres);
     }
     private void Awake()
     {

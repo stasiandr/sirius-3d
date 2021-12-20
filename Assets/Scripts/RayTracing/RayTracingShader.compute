@@ -18,6 +18,17 @@ struct Sphere
 
 StructuredBuffer<Sphere> _Spheres;
 
+struct Triangle 
+{
+	float3 v0;
+	float3 v1;
+	float3 v2;
+	float3 albedo;
+	float3 specular;
+};
+
+StructuredBuffer<Triangle> _Triangles;
+
 struct Ray
 {
 	float3 origin;
@@ -97,9 +108,12 @@ void IntersectSphere(Ray ray, inout RayHit bestHit, Sphere sphere)
 }
 
 static const float EPSILON = 1e-8;
-bool IntersectTriangle_MT97(Ray ray, float3 vert0, float3 vert1, float3 vert2,
+bool IntersectTriangle_MT97(Ray ray, Triangle T,
 	inout float t, inout float u, inout float v)
 {
+	float3 vert0 = T.v0;
+	float3 vert1 = T.v1;
+	float3 vert2 = T.v2;
 	// find vectors for two edges sharing vert0
 	float3 edge1 = vert1 - vert0;
 	float3 edge2 = vert2 - vert0;
@@ -139,15 +153,20 @@ RayHit Trace(Ray ray)
 	float3 v1 = float3(150, 0, -150);
 	float3 v2 = float3(0, 150 * sqrt(2), -150);
 	float t, u, v;
-	if (IntersectTriangle_MT97(ray, v0, v1, v2, t, u, v))
-	{
-		if (t > 0 && t < bestHit.distance)
+	uint numTriangles;
+	_Triangles.GetDimensions(numTriangles, stride);
+	for (uint j = 0; j < numTriangles; j++) {
+		if (IntersectTriangle_MT97(ray, _Triangles[j], t, u, v))
 		{
-			bestHit.distance = t;
-			bestHit.position = ray.origin + t * ray.direction;
-			bestHit.normal = normalize(cross(v1 - v0, v2 - v0));
-			bestHit.albedo = 0.00f;
-			bestHit.specular = 0.65f * float3(1, 0.4f, 0.2f);
+			if (t > 0 && t < bestHit.distance)
+			{
+				bestHit.distance = t;
+				bestHit.position = ray.origin + t * ray.direction;
+				bestHit.normal = normalize(cross(v1 - v0, v2 - v0));
+				bestHit.albedo = _Triangles[j].albedo;
+				bestHit.specular = _Triangles[j].specular;
+
+			}
 		}
 	}
 	IntersectGroundPlane(ray, bestHit);
