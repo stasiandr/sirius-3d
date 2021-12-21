@@ -4,6 +4,7 @@ using CameraClickController;
 using Commands;
 using MeshTools;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace SceneProvider
 {
@@ -20,8 +21,18 @@ namespace SceneProvider
             CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
         }
 
+        private bool OverUI()
+        {
+            return EventSystem.current.IsPointerOverGameObject();
+        }
+
         private void CameraSelectControllerOnObjectsSelected(List<Collider> obj)
         {
+            if (OverUI())
+            {
+                return;
+            }
+
             foreach (var target in Targets.Where(target => target != null))
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
@@ -29,6 +40,7 @@ namespace SceneProvider
             Targets = new List<GameObject>();
             if (obj == null)
             {
+                ObjectsSelected?.Invoke(Targets);
                 return;
             }
             foreach (var col in obj.Where(col => col != null))
