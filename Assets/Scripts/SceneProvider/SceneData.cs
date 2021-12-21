@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CameraClickController;
@@ -13,6 +14,7 @@ namespace SceneProvider
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
         public static List<ICommand> ExecutedCommands = new List<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
+        public static event Action<List<GameObject>> ObjectsSelected;
         static int NewObjID = 0;
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
 
@@ -105,9 +107,7 @@ namespace SceneProvider
             var meshFilter = go.AddComponent<MeshFilter>();
             meshFilter.mesh = mesh.ToUnityMesh();
 
-            var boxCollider = go.AddComponent<BoxCollider>();
-            boxCollider.center = meshFilter.mesh.bounds.center;
-            boxCollider.size = meshFilter.mesh.bounds.size;
+            var meshCollider = go.AddComponent<MeshCollider>();
 
             go.AddComponent<MeshRenderer>().sharedMaterial = _instance.defaultMaterial;
             ObjectsByID[NewObjID] = go;
