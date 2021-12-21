@@ -23,6 +23,8 @@ struct Sphere
 	float radius;
 	float3 albedo;
 	float3 specular;
+	float smoothness;
+	float3 emission;
 };
 
 StructuredBuffer<Sphere> _Spheres;
@@ -34,6 +36,8 @@ struct Triangle
 	float3 v2;
 	float3 albedo;
 	float3 specular;
+	float smoothness;
+	float3 emission;
 };
 
 StructuredBuffer<Triangle> _Triangles;
@@ -71,6 +75,8 @@ struct RayHit
 	float3 normal;
 	float3 albedo;
 	float3 specular;
+	float smoothness;
+	float3 emission;
 };
 RayHit CreateRayHit()
 {
@@ -80,6 +86,8 @@ RayHit CreateRayHit()
 	hit.normal = float3(0.0f, 0.0f, 0.0f);
 	hit.albedo = float3(0.0f, 0.0f, 0.0f);
 	hit.specular = float3(0.0f, 0.0f, 0.0f);
+	hit.smoothness = 0;
+	float3 emission = float3(0.0f, 0.0f, 0.0f);
 	return hit;
 }
 void IntersectGroundPlane(Ray ray, inout RayHit bestHit)
@@ -93,6 +101,8 @@ void IntersectGroundPlane(Ray ray, inout RayHit bestHit)
 		bestHit.normal = float3(0.0f, 1.0f, 0.0f);
 		bestHit.albedo = float3(0.95f, 0.95f, 0.95f);
 		bestHit.specular = float3(0.1f, 0.1f, 0.1f);
+		bestHit.smoothness = 0.1f;
+		bestHit.emission = float3(0.0f, 0.0f, 0.0f);
 	}
 }
 
@@ -113,6 +123,8 @@ void IntersectSphere(Ray ray, inout RayHit bestHit, Sphere sphere)
         bestHit.normal = normalize(bestHit.position - sphere.position);
         bestHit.albedo = sphere.albedo;
         bestHit.specular = sphere.specular;
+		bestHit.smoothness = sphere.smoothness;
+		bestHit.emission = sphere.emission;
     }
 }
 
@@ -128,11 +140,11 @@ float3x3 GetTangentSpace(float3 normal)
 	return float3x3(tangent, binormal, normal);
 }
 
-float3 SampleHemisphere(float3 normal)
+float3 SampleHemisphere(float3 normal, float alpha)
 {
-	// Uniformly sample hemisphere direction
-	float cosTheta = rand();
-	float sinTheta = sqrt(max(0.0f, 1.0f - cosTheta * cosTheta));
+	// Sample the hemisphere, where alpha determines the kind of the sampling
+	float cosTheta = pow(rand(), 1.0f / (alpha + 1.0f));
+	float sinTheta = sqrt(1.0f - cosTheta * cosTheta);
 	float phi = 2 * PI * rand();
 	float3 tangentSpaceDir = float3(cos(phi) * sinTheta, sin(phi) * sinTheta, cosTheta);
 	// Transform direction to world space
@@ -175,13 +187,22 @@ bool IntersectTriangle_MT97(Ray ray, Triangle T,
 	return true;
 }
 
+float SmoothnessToPhongAlpha(float s)
+{
+	return pow(1000.0f, s * s);
+}
+
+bool render_spheres = true;
+
 RayHit Trace(Ray ray)
 {
 	RayHit bestHit = CreateRayHit();
 	uint numSpheres, stride;
-	_Spheres.GetDimensions(numSpheres, stride);
-	for (uint i = 0; i < numSpheres; i++)
-		IntersectSphere(ray, bestHit, _Spheres[i]);
+	if (render_spheres) {
+		_Spheres.GetDimensions(numSpheres, stride);
+		for (uint i = 0; i < numSpheres; i++)
+			IntersectSphere(ray, bestHit, _Spheres[i]);
+	}
 	float t, u, v;
 	uint numTriangles;
 	_Triangles.GetDimensions(numTriangles, stride);
@@ -195,6 +216,8 @@ RayHit Trace(Ray ray)
 				bestHit.normal = normalize(cross(_Triangles[j].v1 - _Triangles[j].v0, _Triangles[j].v2 - _Triangles[j].v0));
 				bestHit.albedo = _Triangles[j].albedo;
 				bestHit.specular = _Triangles[j].specular;
+				bestHit.smoothness = _Triangles[j].smoothness;
+				bestHit.emission = _Triangles[j].emission;
 			}
 		}
 	}
@@ -207,25 +230,40 @@ float sdot(float3 x, float3 y, float f = 1.0f)
 	return saturate(dot(x, y) * f);
 }
 
+float energy(float3 color)
+{
+	return dot(color, 1.0f / 3.0f);
+}
+
 float3 Shade(inout Ray ray, RayHit hit)
 {
     if (hit.distance < 1.#INF)
     {
-		float3 albedo = hit.albedo;
-        float3 specular = hit.specular;
-        // Reflect the ray and multiply energy with specular reflection
-		ray.origin = hit.position + hit.normal * 0.001f;
-		ray.direction = SampleHemisphere(hit.normal);
-		ray.energy *= 2 * hit.albedo * sdot(hit.normal, ray.direction);
-		return 0;
-		bool shadow = false;
-		Ray shadowRay = CreateRay(hit.position + hit.normal * 0.001f, -1 * _DirectionalLight.xyz);
-		RayHit shadowHit = Trace(shadowRay);
-		if (shadowHit.distance != 1.#INF)
+		hit.albedo = min(1.0f - hit.specular, hit.albedo);
+		float specChance = energy(hit.specular);
+		float diffChance = energy(hit.albedo);
+		float sum = specChance + diffChance;
+		specChance /= sum;
+		diffChance /= sum;
+		// Roulette-select the ray's path
+		float roulette = rand();
+		if (roulette < specChance)
 		{
-			return float3(0.0f, 0.0f, 0.0f);
+			// Specular reflection
+			float alpha = SmoothnessToPhongAlpha(hit.smoothness);
+			ray.origin = hit.position + hit.normal * 0.001f;
+			ray.direction = SampleHemisphere(reflect(ray.direction, hit.normal), alpha);
+			float f = (alpha + 2) / (alpha + 1);
+			ray.energy *= (1.0f / specChance) * hit.specular * sdot(hit.normal, ray.direction, f);
 		}
-		return saturate(dot(hit.normal, _DirectionalLight.xyz) * -1) * _DirectionalLight.w * albedo;
+		else
+		{
+			// Diffuse reflection
+			ray.origin = hit.position + hit.normal * 0.001f;
+			ray.direction = SampleHemisphere(hit.normal, 1.0f);
+			ray.energy *= (1.0f / diffChance) * hit.albedo;
+		}
+		return hit.emission;
     }
     else
     {
@@ -234,7 +272,7 @@ float3 Shade(inout Ray ray, RayHit hit)
         // Sample the skybox and write it
         float theta = acos(ray.direction.y) / -PI;
         float phi = atan2(ray.direction.x, -ray.direction.z) / -PI * 0.5f;
-        return _SkyboxTexture.SampleLevel(sampler_SkyboxTexture, float2(phi, theta), 0).xyz;
+        return _SkyboxTexture.SampleLevel(sampler_SkyboxTexture, float2(phi, theta), 0).xyz * 0.1f;
     }
 }
 
@@ -252,7 +290,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 	// Get a ray for the UVs
 	Ray ray = CreateCameraRay(uv);
 	float3 result = float3(0, 0, 0);
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		RayHit hit = Trace(ray);
 		result += ray.energy * Shade(ray, hit);

@@ -22,6 +22,8 @@ public class RayTracingMaster : MonoBehaviour
         public float radius;
         public Vector3 albedo;
         public Vector3 specular;
+        public float smoothness;
+        public Vector3 emission;
     };
 
     private ComputeBuffer _triangleBuffer;
@@ -32,11 +34,13 @@ public class RayTracingMaster : MonoBehaviour
         public Vector3 v2;
         public Vector3 albedo;
         public Vector3 specular;
+        public float smoothness;
+        public Vector3 emission;
     };
     private void OnEnable()
     {
-        //_currentSample = 0;
-        SetUpScene();
+        _currentSample = 0;
+        SetUpScene2();
     }
     private void OnDisable()
     {
@@ -46,6 +50,7 @@ public class RayTracingMaster : MonoBehaviour
     public int SphereSeed;
     private void SetUpScene()
     {
+        RayTracingShader.SetBool("render_spheres", true);
         Random.InitState(SphereSeed);
         List<Sphere> spheres = new List<Sphere>();
         // Add a number of random spheres
@@ -65,28 +70,50 @@ public class RayTracingMaster : MonoBehaviour
             }
             // Albedo and specular color
             Color color = Random.ColorHSV();
-            bool metal = Random.value < 0.0f;
+            bool metal = Random.value < 0.5f;
+            bool light_source = Random.value < 0.3f;
+            sphere.emission = light_source ? new Vector3(color.r, color.g, color.b) * 2 : Vector3.zero;
             sphere.albedo = metal ? Vector3.zero : new Vector3(color.r, color.g, color.b);
             sphere.specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.04f;
+            sphere.smoothness = metal ? 1 : 0;
             // Add the sphere to the list
             spheres.Add(sphere);
         SkipSphere:
             continue;
         }
         // Assign to compute buffer
-        _sphereBuffer = new ComputeBuffer(spheres.Count, 40);
+        _sphereBuffer = new ComputeBuffer(spheres.Count, 56);
         _sphereBuffer.SetData(spheres);
         List<Triangle> triangles = new List<Triangle>();
         var T = new Triangle();
-        T.v0 = new Vector3(0, 0, 0);
-        T.v1 = new Vector3(50, 100, 0);
-        T.v2 = new Vector3(100, 0, 0);
+        T.v0 = new Vector3(0, 0, 50);
+        T.v1 = new Vector3(50, 100, 50);
+        T.v2 = new Vector3(100, 0, 50);
         T.albedo = new Vector3(0.6f, 0.5f, 0.2f);
         T.specular = new Vector3(0.09f, 0.05f, 0.04f);
+        T.emission = new Vector3(1f, 1f, 1f);
         triangles.Add(T);
-        _triangleBuffer = new ComputeBuffer(triangles.Count, 60);
+        _triangleBuffer = new ComputeBuffer(triangles.Count, 76);
         _triangleBuffer.SetData(triangles);
     }
+    private void SetUpScene2()
+    {
+        RayTracingShader.SetBool("render_spheres", false);
+        Random.InitState(SphereSeed);
+        List<Sphere> spheres = new List<Sphere>();
+        spheres.Add(new Sphere());
+        _sphereBuffer = new ComputeBuffer(spheres.Count, 56);
+        _sphereBuffer.SetData(spheres);
+        List<Triangle> triangles = new List<Triangle>();
+        foreach (var obj in SceneProvider.SceneData.ObjectByID)
+        {
+
+        }
+        triangles.Add(T);
+        _triangleBuffer = new ComputeBuffer(triangles.Count, 76);
+        _triangleBuffer.SetData(triangles);
+    }
+
     private void Awake()
     {
         _camera = GetComponent<Camera>();
@@ -110,6 +137,7 @@ public class RayTracingMaster : MonoBehaviour
         private void SetShaderParameters()
     {
         Vector3 l = DirectionalLight.transform.forward;
+        RayTracingShader.SetFloat("_Seed", Random.value);
         RayTracingShader.SetVector("_PixelOffset", new Vector2(Random.value, Random.value));
         RayTracingShader.SetVector("_DirectionalLight", new Vector4(l.x, l.y, l.z, DirectionalLight.intensity));
         RayTracingShader.SetTexture(0, "_SkyboxTexture", SkyboxTexture);
