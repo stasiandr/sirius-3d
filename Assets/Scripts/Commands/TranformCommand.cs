@@ -26,7 +26,7 @@ namespace Commands
         {
             foreach (var obj in Objects)
             {
-                SceneData.ObjectsByID[obj].transform.Translate(Trans);
+                SceneData.ObjectsByID[obj].transform.position = SceneData.ObjectsByID[obj].transform.position + Trans;
             }
         }
 
@@ -34,7 +34,7 @@ namespace Commands
         {
             foreach (var obj in Objects)
             {
-                SceneData.ObjectsByID[obj].transform.Translate(-Trans);
+                SceneData.ObjectsByID[obj].transform.position = SceneData.ObjectsByID[obj].transform.position - Trans;
             }
         }
     }
