@@ -6,6 +6,7 @@ using Commands;
 using MeshTools;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using VRCameraClickController;
 
 namespace SceneProvider
 {
@@ -17,7 +18,8 @@ namespace SceneProvider
         
         public void OnEnable()
         {
-            CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
+            // CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
+            VRCameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
         }
 
         private bool OverUI()
