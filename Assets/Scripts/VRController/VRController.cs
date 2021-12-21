@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using SceneProvider;
 
 namespace VRController
 {
@@ -13,6 +16,7 @@ namespace VRController
         public void Start()
         {
             rig = GetComponent<OVRCameraRig>();
+            SceneData.ObjectsSelected += Drag;
         }
 
         private void Move(Vector2 input)
@@ -43,6 +47,47 @@ namespace VRController
             movement *= speedProduct;
             this.transform.Translate(movement);
         }
+
+        private void Drag(List<GameObject> targets)
+        {
+            Vector3 startPos = Vector3.zero, endPos;
+            
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger))
+            {
+                startPos = Grab(targets);
+            }
+
+            if (OVRInput.GetUp(OVRInput.Button.PrimaryHandTrigger))
+            {
+                Debug.Assert(startPos != Vector3.zero, "startPos != Vector3.zero");
+                endPos = Ungrab(targets);
+                targets.First().transform.position = startPos;
+                SceneData.ExecutionQueue.Enqueue
+                    (
+                        new Commands.TransformCommand
+                            (
+                                targets,
+                                endPos - startPos
+                            )
+                    );
+            }
+        }
+        
+        private Vector3 Grab(List<GameObject> targets)
+        {
+            var startPos = targets.First().transform;
+            var parent = rig.leftHandAnchor.GetChild(1);
+            targets.First().transform.SetParent(parent);
+            return startPos.position;
+        }
+
+        private Vector3 Ungrab(List<GameObject> targets)
+        {
+            var endPos = targets.First().transform;
+            targets.First().transform.SetParent(null);
+            return endPos.position;
+        }
+        
         public void Update()
         {
             var inputLeftThumbstick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
