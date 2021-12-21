@@ -42,6 +42,18 @@ struct Triangle
 
 StructuredBuffer<Triangle> _Triangles;
 
+struct Object 
+{
+	float3 albedo;
+	float3 specular;
+	float smoothness;
+	float3 emission;
+	uint triangles_start;
+	uint triangles_count;
+};
+
+StructuredBuffer<Object> _Objects;
+
 struct Ray
 {
 	float3 origin;
@@ -187,6 +199,25 @@ bool IntersectTriangle_MT97(Ray ray, Triangle T,
 	return true;
 }
 
+void IntersectObject(Ray ray, inout RayHit bestHit, Object obj) {
+	float t, u, v;
+	for (uint i = obj.triangles_start; i < obj.triangles_start + obj.triangles_count; i++) {
+		if (IntersectTriangle_MT97(ray, _Triangles[i], t, u, v))
+		{
+			if (t > 0 && t < bestHit.distance)
+			{
+				bestHit.distance = t;
+				bestHit.position = ray.origin + t * ray.direction;
+				bestHit.normal = normalize(cross(_Triangles[i].v1 - _Triangles[i].v0, _Triangles[i].v2 - _Triangles[i].v0));
+				bestHit.albedo = obj.albedo;
+				bestHit.specular = obj.specular;
+				bestHit.smoothness = obj.smoothness;
+				bestHit.emission = obj.emission;
+			}
+		}
+	}
+}
+
 float SmoothnessToPhongAlpha(float s)
 {
 	return pow(1000.0f, s * s);
@@ -203,23 +234,10 @@ RayHit Trace(Ray ray)
 		for (uint i = 0; i < numSpheres; i++)
 			IntersectSphere(ray, bestHit, _Spheres[i]);
 	}
-	float t, u, v;
-	uint numTriangles;
-	_Triangles.GetDimensions(numTriangles, stride);
-	for (uint j = 0; j < numTriangles; j++) {
-		if (IntersectTriangle_MT97(ray, _Triangles[j], t, u, v))
-		{
-			if (t > 0 && t < bestHit.distance)
-			{
-				bestHit.distance = t;
-				bestHit.position = ray.origin + t * ray.direction;
-				bestHit.normal = normalize(cross(_Triangles[j].v1 - _Triangles[j].v0, _Triangles[j].v2 - _Triangles[j].v0));
-				bestHit.albedo = _Triangles[j].albedo;
-				bestHit.specular = _Triangles[j].specular;
-				bestHit.smoothness = _Triangles[j].smoothness;
-				bestHit.emission = _Triangles[j].emission;
-			}
-		}
+	uint numObjects;
+	_Objects.GetDimensions(numObjects, stride);
+	for (uint j = 0; j < numObjects; j++) {
+		IntersectObject(ray, bestHit, _Objects[j]);
 	}
 	IntersectGroundPlane(ray, bestHit);
 	return bestHit;
@@ -272,7 +290,7 @@ float3 Shade(inout Ray ray, RayHit hit)
         // Sample the skybox and write it
         float theta = acos(ray.direction.y) / -PI;
         float phi = atan2(ray.direction.x, -ray.direction.z) / -PI * 0.5f;
-        return _SkyboxTexture.SampleLevel(sampler_SkyboxTexture, float2(phi, theta), 0).xyz * 0.1f;
+        return _SkyboxTexture.SampleLevel(sampler_SkyboxTexture, float2(phi, theta), 0).xyz;
     }
 }
 

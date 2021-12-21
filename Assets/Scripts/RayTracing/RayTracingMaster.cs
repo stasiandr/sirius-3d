@@ -15,7 +15,7 @@ public class RayTracingMaster : MonoBehaviour
     public Vector2 SphereRadius = new Vector2(3.0f, 8.0f);
     public uint SpheresMax = 100;
     public float SpherePlacementRadius = 100.0f;
-    private ComputeBuffer _sphereBuffer;
+    
     struct Sphere
     {
         public Vector3 position;
@@ -25,8 +25,8 @@ public class RayTracingMaster : MonoBehaviour
         public float smoothness;
         public Vector3 emission;
     };
+    private ComputeBuffer _sphereBuffer;
 
-    private ComputeBuffer _triangleBuffer;
     struct Triangle
     {
         public Vector3 v0;
@@ -37,6 +37,19 @@ public class RayTracingMaster : MonoBehaviour
         public float smoothness;
         public Vector3 emission;
     };
+    private ComputeBuffer _triangleBuffer;
+
+    struct Object
+    {
+        public Vector3 albedo;
+        public Vector3 specular;
+        public float smoothness;
+        public Vector3 emission;
+        public int triangles_start;
+        public int triangles_count;
+    }
+    private ComputeBuffer _ObjectsBuffer;
+
     private void OnEnable()
     {
         _currentSample = 0;
@@ -46,6 +59,13 @@ public class RayTracingMaster : MonoBehaviour
     {
         if (_sphereBuffer != null)
             _sphereBuffer.Release();
+
+        if (_triangleBuffer != null)
+            _triangleBuffer.Release();
+
+        if (_ObjectsBuffer != null)
+            _ObjectsBuffer.Release();
+
     }
     public int SphereSeed;
     private void SetUpScene()
@@ -105,13 +125,42 @@ public class RayTracingMaster : MonoBehaviour
         _sphereBuffer = new ComputeBuffer(spheres.Count, 56);
         _sphereBuffer.SetData(spheres);
         List<Triangle> triangles = new List<Triangle>();
-        foreach (var obj in SceneProvider.SceneData.ObjectByID)
+        List<Object> Objects = new List<Object>();
+        foreach (var key in SceneProvider.SceneData.ObjectsByID.Keys)
         {
-
+            var obj = SceneProvider.SceneData.ObjectsByID[key];
+            Color color = Random.ColorHSV();
+            bool metal = Random.value < 0.5f;
+            bool light_source = Random.value < 0.3f;
+            var obj_struct = new Object()
+            {
+                albedo = metal ? Vector3.zero : new Vector3(color.r, color.g, color.b),
+                specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.04f,
+                smoothness = metal ? 1 : 0,
+                triangles_start = triangles.Count
+            };
+            var meshF = obj.GetComponent<MeshFilter>();
+            var mesh = meshF.mesh;
+            for (int i = 0; i < mesh.triangles.Length; i += 3)
+            {
+                Triangle T = new Triangle
+                {
+                    v0 = obj.transform.TransformPoint(mesh.vertices[mesh.triangles[i]]),
+                    v1 = obj.transform.TransformPoint(mesh.vertices[mesh.triangles[i + 1]]),
+                    v2 = obj.transform.TransformPoint(mesh.vertices[mesh.triangles[i + 2]]),
+                    albedo = metal ? Vector3.zero : new Vector3(color.r, color.g, color.b),
+                    specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.04f,
+                    smoothness = metal ? 1 : 0
+                };
+                triangles.Add(T);
+            }
+            obj_struct.triangles_count = mesh.triangles.Length;
+            Objects.Add(obj_struct);
         }
-        triangles.Add(T);
         _triangleBuffer = new ComputeBuffer(triangles.Count, 76);
         _triangleBuffer.SetData(triangles);
+        _ObjectsBuffer = new ComputeBuffer(Objects.Count, 48);
+        _ObjectsBuffer.SetData(Objects);
     }
 
     private void Awake()
@@ -145,6 +194,7 @@ public class RayTracingMaster : MonoBehaviour
         RayTracingShader.SetMatrix("_CameraInverseProjection", _camera.projectionMatrix.inverse);
         RayTracingShader.SetBuffer(0, "_Spheres", _sphereBuffer);
         RayTracingShader.SetBuffer(0, "_Triangles", _triangleBuffer);
+        RayTracingShader.SetBuffer(0, "_Objects", _ObjectsBuffer);
     }
 
     private RenderTexture _converged;
