@@ -14,6 +14,7 @@ namespace SceneProvider
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
         public static event Action<List<GameObject>> ObjectsSelected;
+        public static MyMesh UploadedMesh;
         
         public void OnEnable()
         {
@@ -59,7 +60,7 @@ namespace SceneProvider
             Debug.Log(Targets);
         }
 
-        private static SceneData _instance;
+        public static SceneData _instance;
 
         public Material defaultMaterial;
         public Material selectedMaterial;

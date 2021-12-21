@@ -46,6 +46,9 @@ namespace Commands
                 case "Plane":
                     mesh = MeshGenerator.GeneratePlane();
                     break;
+                case "Object":
+                    mesh = SceneData.UploadedMesh;
+                    break;
                 default:
                     throw new NotImplementedException();
             }
