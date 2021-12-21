@@ -54,6 +54,8 @@ namespace SceneProvider
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = selectedMaterial;
             }
+
+            ObjectsSelected?.Invoke(Targets);
         }
 
         private static SceneData _instance;
