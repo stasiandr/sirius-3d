@@ -11,7 +11,7 @@ namespace CameraClickController
 
         private List<Collider> _selected;
 
-        public string handlesLayerName = "Handles";
+        public string handlesLayerName = "handles";
 
         private void OnEnable()
         {
@@ -31,8 +31,11 @@ namespace CameraClickController
             Debug.Assert(Camera.main != null, "Camera.main != null");
             
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            var hits = Physics.RaycastAll(ray, 1000, ~LayerMask.NameToLayer(handlesLayerName));
-
+            var hits = Physics.RaycastAll(ray, 1000, 1 << 6);
+            var hits2 = Physics.RaycastAll(ray, 1000);
+            if (hits2.Length != 0 && hits.Length == 0) {
+                return;
+            }
             if (hits.Length == 0)
             {
                 _selected.Clear();
