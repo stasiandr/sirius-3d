@@ -44,6 +44,8 @@ StructuredBuffer<Triangle> _Triangles;
 
 struct Object 
 {
+	float3 lb;
+	float3 rt;
 	float3 albedo;
 	float3 specular;
 	float smoothness;
@@ -102,6 +104,33 @@ RayHit CreateRayHit()
 	float3 emission = float3(0.0f, 0.0f, 0.0f);
 	return hit;
 }
+
+bool IntersectBox(Ray ray, Object box){
+	// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
+	// r.org is origin of ray
+	float t1 = (box.lb.x - ray.origin.x) / ray.direction.x;
+	float t2 = (box.rt.x - ray.origin.x) / ray.direction.x;
+	float t3 = (box.lb.y - ray.origin.y) / ray.direction.y;
+	float t4 = (box.rt.y - ray.origin.y) / ray.direction.y;
+	float t5 = (box.lb.z - ray.origin.z) / ray.direction.z;
+	float t6 = (box.rt.z - ray.origin.z) / ray.direction.z;
+
+	float tmin = max(max(min(t1, t2), min(t3, t4)), min(t5, t6));
+	float tmax = min(min(max(t1, t2), max(t3, t4)), max(t5, t6));
+
+	// if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
+	if (tmax < 0)
+	{
+		return false;
+	}
+	// if tmin > tmax, ray doesn't intersect AABB
+	if (tmin > tmax)
+	{
+		return false;
+	}
+	return true;
+}
+
 void IntersectGroundPlane(Ray ray, inout RayHit bestHit)
 {
 	// Calculate distance along the ray where the ground plane is intersected
@@ -200,19 +229,21 @@ bool IntersectTriangle_MT97(Ray ray, Triangle T,
 }
 
 void IntersectObject(Ray ray, inout RayHit bestHit, Object obj) {
-	float t, u, v;
-	for (uint i = obj.triangles_start; i < obj.triangles_start + obj.triangles_count; i++) {
-		if (IntersectTriangle_MT97(ray, _Triangles[i], t, u, v))
-		{
-			if (t > 0 && t < bestHit.distance)
+	if (IntersectBox(ray, obj)) {
+		float t, u, v;
+		for (uint i = obj.triangles_start; i < obj.triangles_start + obj.triangles_count; i++) {
+			if (IntersectTriangle_MT97(ray, _Triangles[i], t, u, v))
 			{
-				bestHit.distance = t;
-				bestHit.position = ray.origin + t * ray.direction;
-				bestHit.normal = normalize(cross(_Triangles[i].v1 - _Triangles[i].v0, _Triangles[i].v2 - _Triangles[i].v0));
-				bestHit.albedo = obj.albedo;
-				bestHit.specular = obj.specular;
-				bestHit.smoothness = obj.smoothness;
-				bestHit.emission = obj.emission;
+				if (t > 0 && t < bestHit.distance)
+				{
+					bestHit.distance = t;
+					bestHit.position = ray.origin + t * ray.direction;
+					bestHit.normal = normalize(cross(_Triangles[i].v1 - _Triangles[i].v0, _Triangles[i].v2 - _Triangles[i].v0));
+					bestHit.albedo = obj.albedo;
+					bestHit.specular = obj.specular;
+					bestHit.smoothness = obj.smoothness;
+					bestHit.emission = obj.emission;
+				}
 			}
 		}
 	}

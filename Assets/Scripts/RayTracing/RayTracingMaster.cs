@@ -41,6 +41,8 @@ public class RayTracingMaster : MonoBehaviour
 
     struct Object
     {
+        public Vector3 lb;
+        public Vector3 rt;
         public Vector3 albedo;
         public Vector3 specular;
         public float smoothness;
@@ -137,8 +139,10 @@ public class RayTracingMaster : MonoBehaviour
                 albedo = metal ? Vector3.zero : new Vector3(color.r, color.g, color.b),
                 specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.04f,
                 smoothness = metal ? 1 : 0,
-                triangles_start = triangles.Count
-            };
+                triangles_start = triangles.Count,
+                lb = new Vector3(100000, 100000, 100000),
+                rt = new Vector3(-100000, -100000, -100000)
+        };
             var meshF = obj.GetComponent<MeshFilter>();
             var mesh = meshF.mesh;
             for (int i = 0; i < mesh.triangles.Length; i += 3)
@@ -152,6 +156,12 @@ public class RayTracingMaster : MonoBehaviour
                     specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.04f,
                     smoothness = metal ? 1 : 0
                 };
+                obj_struct.lb.x = Mathf.Min(T.v0.x, T.v1.x, T.v2.x, obj_struct.lb.x);
+                obj_struct.lb.y = Mathf.Min(T.v0.y, T.v1.y, T.v2.y, obj_struct.lb.y);
+                obj_struct.lb.z = Mathf.Min(T.v0.z, T.v1.z, T.v2.z, obj_struct.lb.z);
+                obj_struct.rt.x = Mathf.Max(T.v0.x, T.v1.x, T.v2.x, obj_struct.rt.x);
+                obj_struct.rt.y = Mathf.Max(T.v0.y, T.v1.y, T.v2.y, obj_struct.rt.y);
+                obj_struct.rt.z = Mathf.Max(T.v0.z, T.v1.z, T.v2.z, obj_struct.rt.z);
                 triangles.Add(T);
             }
             obj_struct.triangles_count = mesh.triangles.Length;
@@ -159,7 +169,7 @@ public class RayTracingMaster : MonoBehaviour
         }
         _triangleBuffer = new ComputeBuffer(triangles.Count, 76);
         _triangleBuffer.SetData(triangles);
-        _ObjectsBuffer = new ComputeBuffer(Objects.Count, 48);
+        _ObjectsBuffer = new ComputeBuffer(Objects.Count, 72);
         _ObjectsBuffer.SetData(Objects);
     }
 

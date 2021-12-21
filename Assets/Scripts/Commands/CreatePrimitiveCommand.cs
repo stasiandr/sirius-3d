@@ -57,7 +57,7 @@ namespace Commands
         public void Revert()
         {
             GameObject.Destroy(SceneData.ObjectsByID[MyObjID]);
-            SceneData.ObjectsByID[MyObjID] = null;
+            SceneData.ObjectsByID.Remove(MyObjID);
         }
     }
 }
