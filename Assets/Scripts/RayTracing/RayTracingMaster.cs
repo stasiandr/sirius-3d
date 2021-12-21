@@ -132,8 +132,8 @@ public class RayTracingMaster : MonoBehaviour
         {
             var obj = SceneProvider.SceneData.ObjectsByID[key];
             Color color = Random.ColorHSV();
-            bool metal = Random.value < 0.5f;
-            bool light_source = Random.value < 0.3f;
+            bool metal = true;//Random.value < 0.5f;
+            bool light_source = false;// Random.value < 0.3f;
             var obj_struct = new Object()
             {
                 albedo = metal ? Vector3.zero : new Vector3(color.r, color.g, color.b),
@@ -210,8 +210,13 @@ public class RayTracingMaster : MonoBehaviour
     private RenderTexture _converged;
     private Material _addMaterial;
 
+    public int step = 256;
+    int rows;
+    int columns;
     private void Render(RenderTexture destination)
     {
+        columns = (int)Mathf.Ceil(Screen.width * 1.0f / step);
+        rows = (int)Mathf.Ceil(Screen.height * 1.0f / step);
         // Make sure we have a current render target
         InitRenderTexture();
         // Set the target and dispatch the compute shader
@@ -223,7 +228,12 @@ public class RayTracingMaster : MonoBehaviour
         // Blit the result texture to the screen
         if (_addMaterial == null)
             _addMaterial = new Material(Shader.Find("Hidden/AddShader"));
-        _addMaterial.SetFloat("_Sample", _currentSample);
+        print(_currentSample / columns / rows);
+        _addMaterial.SetFloat("_Sample", _currentSample / columns / rows);
+        RayTracingShader.SetFloat("min_x", step * (_currentSample % columns));
+        RayTracingShader.SetFloat("max_x", step * ((_currentSample % columns) + 1));
+        RayTracingShader.SetFloat("min_y", step * ((_currentSample / columns) % rows));
+        RayTracingShader.SetFloat("max_y", step * ((_currentSample / columns) % rows + 1));
         Graphics.Blit(_target, _converged, _addMaterial);
         Graphics.Blit(_converged, destination);
         _currentSample++;

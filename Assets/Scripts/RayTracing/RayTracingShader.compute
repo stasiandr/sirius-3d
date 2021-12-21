@@ -326,11 +326,18 @@ float3 Shade(inout Ray ray, RayHit hit)
 }
 
 float2 _PixelOffset;
+float min_x;
+float max_x;
+float min_y;
+float max_y;
 
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
 	_Pixel = id.xy;
+	if (_Pixel.x < min_x || _Pixel.x > max_x || _Pixel.y < min_y || _Pixel.y > max_y) {
+		return;
+	}
 	// Get the dimensions of the RenderTexture
 	uint width, height;
 	Result.GetDimensions(width, height);
