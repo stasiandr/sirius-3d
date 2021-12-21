@@ -12,9 +12,12 @@ namespace SceneProvider
     public class SceneData : MonoBehaviour
     {
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
+        public static List<ICommand> ExecutedCommands = new List<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
         public static event Action<List<GameObject>> ObjectsSelected;
-        
+        static int NewObjID = 0;
+        public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
+
         public void OnEnable()
         {
             CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
@@ -35,16 +38,13 @@ namespace SceneProvider
             foreach (var target in Targets.Where(target => target != null))
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
-            }   
-            
+            }
             Targets = new List<GameObject>();
-
             if (obj == null)
             {
                 ObjectsSelected?.Invoke(Targets);
                 return;
             }
-
             foreach (var col in obj.Where(col => col != null))
             {
                 Targets.Add(col.gameObject);
@@ -54,9 +54,6 @@ namespace SceneProvider
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = selectedMaterial;
             }
-
-            ObjectsSelected?.Invoke(Targets);
-            Debug.Log(Targets);
         }
 
         private static SceneData _instance;
@@ -67,22 +64,44 @@ namespace SceneProvider
         private void Start()
         {
             _instance = this;
+            Targets = new List<GameObject>();
+            NewObjID = 0;
+            ObjectsByID = new Dictionary<int, GameObject>();
         }
 
         public void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
+            {
+                ExecutionQueue.Enqueue(new DeleteCommand(Targets));
+            }
             if (ExecutionQueue.Count > 0)
             {
                 var command = ExecutionQueue.Dequeue();
                 command.Apply();
+                ExecutedCommands.Add(command);
             }
+            
+            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z) && ExecutedCommands.Count > 0)
+            {
+                Undo();
+            }
+            
         }
-        public static void CreateMesh(MyMesh mesh)
+
+        public static void Undo()
+        {
+            var command = ExecutedCommands.Last();
+            command.Revert();
+            ExecutedCommands.RemoveAt(ExecutedCommands.Count - 1);
+        }
+
+        public static int CreateMesh(MyMesh mesh)
         {
             var go = new GameObject
             {
-                name = "Cube",
-                layer = LayerMask.NameToLayer("Handles")
+                name = "" + NewObjID,
+                layer = LayerMask.NameToLayer("Objects")
             };
 
             var meshFilter = go.AddComponent<MeshFilter>();
@@ -91,6 +110,9 @@ namespace SceneProvider
             var meshCollider = go.AddComponent<MeshCollider>();
 
             go.AddComponent<MeshRenderer>().sharedMaterial = _instance.defaultMaterial;
+            ObjectsByID[NewObjID] = go;
+            NewObjID++;
+            return NewObjID - 1;
         }
     }
 }
