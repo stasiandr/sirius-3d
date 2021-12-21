@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CameraClickController;
 using Commands;
 using MeshTools;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace SceneProvider
 {
@@ -12,6 +14,7 @@ namespace SceneProvider
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
         public static List<ICommand> ExecutedCommands = new List<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
+        public static event Action<List<GameObject>> ObjectsSelected;
         static int NewObjID = 0;
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
 
@@ -20,8 +23,18 @@ namespace SceneProvider
             CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
         }
 
+        private bool OverUI()
+        {
+            return EventSystem.current.IsPointerOverGameObject();
+        }
+
         private void CameraSelectControllerOnObjectsSelected(List<Collider> obj)
         {
+            if (OverUI())
+            {
+                return;
+            }
+
             foreach (var target in Targets.Where(target => target != null))
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
@@ -29,6 +42,7 @@ namespace SceneProvider
             Targets = new List<GameObject>();
             if (obj == null)
             {
+                ObjectsSelected?.Invoke(Targets);
                 return;
             }
             foreach (var col in obj.Where(col => col != null))
@@ -40,6 +54,8 @@ namespace SceneProvider
             {
                 target.GetComponent<MeshRenderer>().sharedMaterial = selectedMaterial;
             }
+
+            ObjectsSelected?.Invoke(Targets);
         }
 
         private static SceneData _instance;
@@ -93,9 +109,7 @@ namespace SceneProvider
             var meshFilter = go.AddComponent<MeshFilter>();
             meshFilter.mesh = mesh.ToUnityMesh();
 
-            var boxCollider = go.AddComponent<BoxCollider>();
-            boxCollider.center = meshFilter.mesh.bounds.center;
-            boxCollider.size = meshFilter.mesh.bounds.size;
+            var meshCollider = go.AddComponent<MeshCollider>();
 
             go.AddComponent<MeshRenderer>().sharedMaterial = _instance.defaultMaterial;
             ObjectsByID[NewObjID] = go;
