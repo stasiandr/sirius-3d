@@ -18,8 +18,7 @@ namespace VRCameraClickController
 
         private void Update()
         {
-            //if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
-            if (true)
+            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
             {
                 SphereCast();
             }
