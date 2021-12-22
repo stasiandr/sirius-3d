@@ -2,6 +2,7 @@ using System;
 using MeshTools;
 using SceneProvider;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
 
 namespace Commands
 {
@@ -58,6 +59,21 @@ namespace Commands
         {
             GameObject.Destroy(SceneData.ObjectsByID[MyObjID]);
             SceneData.ObjectsByID.Remove(MyObjID);
+        }
+
+        public static string Serialize(CreatePrimitiveCommand command)
+        {
+            JObject json = new JObject(new JProperty("CommandType", "CreatePrimitive"),
+                new JProperty("MeshType", command.MeshType));
+            return json.ToString();
+        }
+
+        public static CreatePrimitiveCommand Deserialize(string str)
+        {
+            JObject json = JObject.Parse(str);
+            CreatePrimitiveCommand command = new CreatePrimitiveCommand();
+            command.MeshType = json["MeshType"].Value<string>();
+            return command;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MeshTools;
 using SceneProvider;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
 
 namespace Commands
 {
@@ -46,6 +47,21 @@ namespace Commands
             throw new NotImplementedException();
             //to do откат удаления
             //SceneData.ExecutionQueue.Enequeue(new CreatePrimitiveCommand(MeshTypes[i], Positions[i], ...));
+        }
+
+        public static string Serialize(DeleteCommand command)
+        {
+            JObject json = new JObject(new JProperty("CommandType", "Delete"),
+                new JProperty("Objects", new JArray(command.Objects)));
+            return json.ToString();
+        }
+
+        public static DeleteCommand Deserialize(string str)
+        {
+            JObject json = JObject.Parse(str);
+            DeleteCommand command = new DeleteCommand();
+            command.Objects = json["Objects"].Value<JArray>().ToObject<List<int>>();
+            return command;
         }
     }
 }
