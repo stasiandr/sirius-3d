@@ -8,9 +8,9 @@ namespace UIController
 {
     public class UploadObjectButton : MonoBehaviour
     {
-        public void UploadObject()
+        public void UploadObject(string name)
         {
-            SceneData.ExecutionQueue.Enqueue(new UploadObjectCommand());
+            SceneData.ExecutionQueue.Enqueue(new UploadObjectCommand(name));
         }
     }
 }

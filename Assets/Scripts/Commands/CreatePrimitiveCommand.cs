@@ -48,11 +48,16 @@ namespace Commands
                 case "Plane":
                     mesh = MeshGenerator.GeneratePlane();
                     break;
-                case "Object":
-                    mesh = SceneData.UploadedMesh;
-                    break;
                 default:
-                    throw new NotImplementedException();
+                    if (SceneData.UploadedMeshes.ContainsKey(MeshType))
+                    {
+                        mesh = SceneData.UploadedMeshes[MeshType];
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                    break;
             }
             MyObjID = SceneData.CreateMesh(mesh);
         }

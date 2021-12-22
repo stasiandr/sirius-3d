@@ -15,7 +15,7 @@ namespace SceneProvider
         public static List<ICommand> ExecutedCommands = new List<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
         public static event Action<List<GameObject>> ObjectsSelected;
-        public static MyMesh UploadedMesh;
+        public static Dictionary<string, MyMesh> UploadedMeshes = new Dictionary<string, MyMesh>();
         
         static int NewObjID = 0;
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
