@@ -9,15 +9,20 @@ namespace Commands
     public class UploadObjectCommand : ICommand
     {
         public string name;
+        public string path;
 
-        public UploadObjectCommand(string _name) {
+        public UploadObjectCommand(string _name, string _path = "") {
             name = _name;
+            if (_path == "") {
+                path = FilePath(name);
+            } else {
+                path = _path;
+            }
         }
 
         public void Apply()
         {
             var new_mesh = new MyMesh();
-            string path = FilePath(name);
             var obj = new Dummiesman.OBJLoader().Load(path);
             if (obj.GetComponent<MeshFilter>())
             {
