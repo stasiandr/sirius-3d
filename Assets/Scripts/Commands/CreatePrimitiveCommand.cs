@@ -34,7 +34,7 @@ namespace Commands
                     mesh = MeshGenerator.GenerateCube(/*Pos, Scale*/);
                     break;
                 case "Sphere":
-                    mesh = SphereGenerator.GenerateSphere(100, 100);
+                    mesh = SphereGenerator.GenerateSphere(10, 10);
                     break;
                 case "Cone":
                     mesh = MeshGenerator.GenerateCone(/*Height, Radius, VertexCount*/);
@@ -57,7 +57,7 @@ namespace Commands
         public void Revert()
         {
             GameObject.Destroy(SceneData.ObjectsByID[MyObjID]);
-            SceneData.ObjectsByID[MyObjID] = null;
+            SceneData.ObjectsByID.Remove(MyObjID);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Commands
                 var obj = SceneData.ObjectsByID[id];
                 GameObject.Destroy(obj);
                 //to do запонимать все свойства удалённого объекта
-                SceneData.ObjectsByID[id] = null;
+                SceneData.ObjectsByID.Remove(id);
             }
             SceneData.Targets = new List<GameObject>();
         }
