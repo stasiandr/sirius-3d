@@ -50,7 +50,15 @@ namespace Commands
                     mesh = MeshGenerator.GeneratePlane();
                     break;
                 default:
-                    throw new NotImplementedException();
+                    if (SceneData.UploadedMeshes.ContainsKey(MeshType))
+                    {
+                        mesh = SceneData.UploadedMeshes[MeshType];
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                    break;
             }
             MyObjID = SceneData.CreateMesh(mesh);
         }
