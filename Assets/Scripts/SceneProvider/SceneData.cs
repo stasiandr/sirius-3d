@@ -15,6 +15,8 @@ namespace SceneProvider
         public static List<ICommand> ExecutedCommands = new List<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
         public static event Action<List<GameObject>> ObjectsSelected;
+        public static Dictionary<string, MyMesh> UploadedMeshes = new Dictionary<string, MyMesh>();
+        
         static int NewObjID = 0;
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
 
@@ -58,7 +60,7 @@ namespace SceneProvider
             ObjectsSelected?.Invoke(Targets);
         }
 
-        private static SceneData _instance;
+        public static SceneData _instance;
 
         public Material defaultMaterial;
         public Material selectedMaterial;
