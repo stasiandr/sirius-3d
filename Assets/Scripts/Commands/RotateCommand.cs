@@ -9,11 +9,13 @@ namespace Commands
     public struct RotateCommand : ICommand
     {
         Vector3 Trans;
-        List<GameObject> Objects;
+        List<int> Objects;
 
         public RotateCommand(List<GameObject> targets, Vector3 trans = default)
         {
-            Objects = targets;
+            Objects = new List<int>();
+            foreach (var obj in targets)
+                Objects.Add(Convert.ToInt32(obj.name));
             Trans = trans;
         }
 
@@ -21,7 +23,7 @@ namespace Commands
         {
             foreach (var obj in Objects)
             {
-                obj.transform.eulerAngles += Trans;
+                SceneData.ObjectsByID[obj].transform.eulerAngles += Trans;
             }
         }
 
@@ -29,7 +31,7 @@ namespace Commands
         {
             foreach (var obj in Objects)
             {
-                obj.transform.Rotate(-Trans, Space.World);
+                SceneData.ObjectsByID[obj].transform.eulerAngles -= Trans;
             }
         }
     }

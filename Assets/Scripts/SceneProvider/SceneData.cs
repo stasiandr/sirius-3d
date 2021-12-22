@@ -73,7 +73,7 @@ namespace SceneProvider
 
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
+            if (Input.GetKeyDown(KeyCode.Delete))
             {
                 ExecutionQueue.Enqueue(new DeleteCommand(Targets));
             }
