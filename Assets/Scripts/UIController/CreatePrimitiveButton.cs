@@ -29,9 +29,6 @@ namespace UIController
                 case 5:
                     SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Plane"));
                     break;
-                case 6:
-                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Object"));
-                    break;
                 default:
                     throw new NotImplementedException();
             }
