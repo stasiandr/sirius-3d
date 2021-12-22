@@ -38,7 +38,7 @@ namespace UIController
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.TransformCommand(Targets, new Vector3(newpos -
+            SceneData.RequestQueue.Enqueue(new Commands.TransformCommand(Targets, new Vector3(newpos -
                 Targets[0].transform.position.x, 0, 0)));
         }
 
@@ -48,7 +48,7 @@ namespace UIController
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.TransformCommand(Targets, new Vector3(0, newpos -
+            SceneData.RequestQueue.Enqueue(new Commands.TransformCommand(Targets, new Vector3(0, newpos -
                 Targets[0].transform.position.y, 0)));
         }
 
@@ -58,7 +58,7 @@ namespace UIController
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.TransformCommand(Targets, new Vector3(0, 0, newpos -
+            SceneData.RequestQueue.Enqueue(new Commands.TransformCommand(Targets, new Vector3(0, 0, newpos -
                 Targets[0].transform.position.z)));
         }
 

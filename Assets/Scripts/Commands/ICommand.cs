@@ -4,5 +4,6 @@ namespace Commands
     {
         void Apply();
         void Revert();
+        string Serialize();
     }
 }

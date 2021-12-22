@@ -39,7 +39,7 @@ namespace UIController
                 return;
             }
             var angle = Targets[0].transform.rotation.eulerAngles;
-            SceneData.ExecutionQueue.Enqueue(new Commands.RotateCommand(Targets,
+            SceneData.RequestQueue.Enqueue(new Commands.RotateCommand(Targets,
                 new Vector3(newpos - angle.x, 0, 0)));
         }
 
@@ -50,7 +50,7 @@ namespace UIController
                 return;
             }
             var angle = Targets[0].transform.rotation.eulerAngles;
-            SceneData.ExecutionQueue.Enqueue(new Commands.RotateCommand(Targets,
+            SceneData.RequestQueue.Enqueue(new Commands.RotateCommand(Targets,
                 new Vector3(0, newpos - angle.y, 0)));
         }
 
@@ -61,7 +61,7 @@ namespace UIController
                 return;
             }
             var angle = Targets[0].transform.rotation.eulerAngles;
-            SceneData.ExecutionQueue.Enqueue(new Commands.RotateCommand(Targets,
+            SceneData.RequestQueue.Enqueue(new Commands.RotateCommand(Targets,
                 new Vector3(0, 0, newpos - angle.z)));
         }
     }
