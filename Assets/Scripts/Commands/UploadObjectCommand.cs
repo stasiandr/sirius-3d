@@ -17,7 +17,7 @@ namespace Commands
         public void Apply()
         {
             var new_mesh = new MyMesh();
-            string path = FilePath();
+            string path = FilePath(name);
             var obj = new Dummiesman.OBJLoader().Load(path);
             if (obj.GetComponent<MeshFilter>())
             {
@@ -48,9 +48,9 @@ namespace Commands
             GameObject.Destroy(obj);
         }
 
-        public string FilePath()
+        public string FilePath(string name)
         {
-            return "al.obj";
+            return "Assets/Models/" + name + ".obj";
         }
 
         public void Revert()

@@ -7,9 +7,11 @@ namespace UIController
 {
     public class CreateUploadedButton : MonoBehaviour
     {
-        public void CreateUploadedByName(string name)
+        public string Name;
+
+        public void CreateUploadedByName()
         {
-            SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand(name));
+            SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand(Name));
         }
     }
 }
