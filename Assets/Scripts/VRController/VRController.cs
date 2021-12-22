@@ -8,15 +8,31 @@ namespace VRController
     public class VRController : MonoBehaviour
     {
         private OVRCameraRig rig;
+        private List<Vector3> startPositions = new List<Vector3>();
+        private List<GameObject> Target;
 
-        public GameObject camera; 
+        public GameObject camera;
+        public GameObject leftControllerObject;
+        public GameObject rightControllerObject;
+
         public const float WalkSpeed = 2.5f;
         public const float FlySpeed = 2.5f;
+        public const float RotationAngle = 45f;
 
         public void Start()
         {
             rig = GetComponent<OVRCameraRig>();
-            SceneData.ObjectsSelected += Drag;
+            SceneData.ObjectsSelected += GetTargets;
+        }
+
+        public void GetTargets(List<GameObject> targets)
+        {
+            Target = new List<GameObject>();
+
+            foreach (var obj in targets.Where(obj => obj != null))
+            {
+                Target.Add(obj);
+            }
         }
 
         private void Move(Vector2 input)
@@ -38,8 +54,8 @@ namespace VRController
         
         private void Fly()
         {
-            float changeUp = ConvertGoUp(OVRInput.Get(OVRInput.Button.One));
-            float changeDown = ConvertGoDown(OVRInput.Get(OVRInput.Button.Two));
+            float changeUp = ConvertGoUp(OVRInput.Get(OVRInput.Button.Four));
+            float changeDown = ConvertGoDown(OVRInput.Get(OVRInput.Button.Three));
             var movement = camera.transform.TransformDirection(0, changeUp + changeDown, 0);
             movement = movement.magnitude == 0 ? Vector3.zero : movement / movement.magnitude;
     
@@ -48,52 +64,95 @@ namespace VRController
             this.transform.Translate(movement);
         }
 
+        public bool kek;
+        
         private void Drag(List<GameObject> targets)
         {
-            Vector3 startPos = Vector3.zero, endPos;
+            var grabbedTargets = new List<GameObject>();
             
             if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger))
             {
-                startPos = Grab(targets);
+                grabbedTargets = Grab(targets, leftControllerObject);
+            }
+
+            var inputForRotation = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
+            Vector3 rotationVector = new Vector3(inputForRotation.y, inputForRotation.x, 0);
+
+            if (grabbedTargets.Count != 0)
+            {
+                foreach (var target in grabbedTargets)
+                {
+                    target.transform.Rotate(rotationVector * RotationAngle * Time.deltaTime);
+                }
             }
 
             if (OVRInput.GetUp(OVRInput.Button.PrimaryHandTrigger))
             {
-                Debug.Assert(startPos != Vector3.zero, "startPos != Vector3.zero");
-                endPos = Ungrab(targets);
-                targets.First().transform.position = startPos;
-                SceneData.ExecutionQueue.Enqueue
+                var endPositions = Ungrab(targets);
+
+                for (int id = 0; id < endPositions.Count; ++id)
+                {
+                    targets[id].transform.position = startPositions[id];
+                    var target = new List<GameObject> {targets[id]};
+                    
+                    SceneData.ExecutionQueue.Enqueue
                     (
                         new Commands.TransformCommand
-                            (
-                                targets,
-                                endPos - startPos
-                            )
+                        (
+                            target,
+                            endPositions[id] - startPositions[id]
+                        )
                     );
+                }
+
+                startPositions = new List<Vector3>();
             }
         }
+
+        public Material mat;
         
-        private Vector3 Grab(List<GameObject> targets)
+        private List<GameObject> Grab(List<GameObject> targets, GameObject parent)
         {
-            var startPos = targets.First().transform;
-            var parent = rig.leftHandAnchor.GetChild(1);
-            targets.First().transform.SetParent(parent);
-            return startPos.position;
+            List<GameObject> grabbed = new List<GameObject>();
+            
+            foreach (var obj in targets)
+            {
+                if (Vector3.Distance(leftControllerObject.transform.position, obj.transform.position) < 0.1f)
+                {
+                    startPositions.Add(obj.transform.position);
+                    obj.transform.parent = parent.transform;
+                    grabbed.Add(obj);
+                }
+            }
+
+            return grabbed;
         }
 
-        private Vector3 Ungrab(List<GameObject> targets)
+        private List<Vector3> Ungrab(List<GameObject> targets)
         {
-            var endPos = targets.First().transform;
-            targets.First().transform.SetParent(null);
-            return endPos.position;
+            List<Vector3> endPositions = new List<Vector3>();
+
+            foreach (var obj in targets.Where(obj => obj.transform.parent != null))
+            {
+                obj.transform.parent = null;
+                endPositions.Add(obj.transform.position);
+            }
+            
+            return endPositions;
         }
         
         public void Update()
         {
+            mat.color = Color.magenta;
             var inputLeftThumbstick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
 
             Move(inputLeftThumbstick);
             Fly();
+            
+            if (Target.Count != 0) 
+            {
+                Drag(Target);
+            }
         }
     }
 }
