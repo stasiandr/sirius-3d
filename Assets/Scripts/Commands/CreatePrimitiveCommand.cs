@@ -12,6 +12,7 @@ namespace Commands
         public Vector3 Scale;
         public int Details;
         public int Details2;
+        int MyObjID;
         public CreatePrimitiveCommand(string meshType, Vector3 pos = default, Vector3 scale = default)
         {
             MeshType = meshType;
@@ -22,6 +23,7 @@ namespace Commands
                 Scale = scale;
             Details = 10;
             Details2 = 10;
+            MyObjID = 0;
         }
 
         public void Apply()
@@ -32,7 +34,7 @@ namespace Commands
                     mesh = MeshGenerator.GenerateCube(/*Pos, Scale*/);
                     break;
                 case "Sphere":
-                    mesh = SphereGenerator.GenerateSphere(100, 100);
+                    mesh = SphereGenerator.GenerateSphere(10, 10);
                     break;
                 case "Cone":
                     mesh = MeshGenerator.GenerateCone(/*Height, Radius, VertexCount*/);
@@ -52,12 +54,13 @@ namespace Commands
                 default:
                     throw new NotImplementedException();
             }
-            SceneData.CreateMesh(mesh);
+            MyObjID = SceneData.CreateMesh(mesh);
         }
 
         public void Revert()
         {
-            throw new NotImplementedException();
+            GameObject.Destroy(SceneData.ObjectsByID[MyObjID]);
+            SceneData.ObjectsByID.Remove(MyObjID);
         }
     }
 }
