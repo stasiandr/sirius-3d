@@ -2,18 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Core.Scripts.Networking;
+using SceneProvider;
+using Commands;
 
 public class ClientProcessing : MonoBehaviour
 {
-    public Client client = new Client();
+    public static Client client = new Client();
 
     public void ProcessMessage(string message)
     {
         Debug.Log(message);
+        SceneData.ExecutionQueue.Enqueue(TransformCommand.Deserialize(message));
     }
 
     IEnumerator Start()
     {
+        client = new Client();
         client.MessageReceived += ProcessMessage;
         client.Init();
 
@@ -21,9 +25,6 @@ public class ClientProcessing : MonoBehaviour
 
         while (!client.IsOpen)
             yield return null;
-
-
-        client.SendRequest("heh");
     }
 
     void Update()

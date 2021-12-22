@@ -36,12 +36,12 @@ namespace Commands
             }
         }
 
-        public static string Serialize(ScaleCommand command)
+        public string Serialize()
         {
             JObject json = new JObject(new JProperty("CommandType", "Scale"),
-                new JProperty("Vector3", new JObject(new JProperty("x", command.Trans.x),
-                new JProperty("y", command.Trans.y), new JProperty("z", command.Trans.z))),
-                new JProperty("Objects", new JArray(command.Objects)));
+                new JProperty("Vector3", new JObject(new JProperty("x", this.Trans.x),
+                new JProperty("y", this.Trans.y), new JProperty("z", this.Trans.z))),
+                new JProperty("Objects", new JArray(this.Objects)));
             return json.ToString();
         }
 

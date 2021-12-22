@@ -49,10 +49,10 @@ namespace Commands
             //SceneData.ExecutionQueue.Enequeue(new CreatePrimitiveCommand(MeshTypes[i], Positions[i], ...));
         }
 
-        public static string Serialize(DeleteCommand command)
+        public string Serialize()
         {
             JObject json = new JObject(new JProperty("CommandType", "Delete"),
-                new JProperty("Objects", new JArray(command.Objects)));
+                new JProperty("Objects", new JArray(this.Objects)));
             return json.ToString();
         }
 

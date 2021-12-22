@@ -12,6 +12,7 @@ namespace SceneProvider
     public class SceneData : MonoBehaviour
     {
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
+        public static Queue<ICommand> RequestQueue = new Queue<ICommand>();
         public static List<ICommand> ExecutedCommands = new List<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
         public static event Action<List<GameObject>> ObjectsSelected;
@@ -65,6 +66,9 @@ namespace SceneProvider
 
         private void Start()
         {
+            ExecutionQueue = new Queue<ICommand>();
+            RequestQueue = new Queue<ICommand>();
+            ExecutedCommands = new List<ICommand>();
             _instance = this;
             Targets = new List<GameObject>();
             NewObjID = 0;
@@ -75,7 +79,7 @@ namespace SceneProvider
         {
             if (Input.GetKeyDown(KeyCode.Delete))
             {
-                ExecutionQueue.Enqueue(new DeleteCommand(Targets));
+                RequestQueue.Enqueue(new DeleteCommand(Targets));
             }
             if (ExecutionQueue.Count > 0)
             {
@@ -83,7 +87,13 @@ namespace SceneProvider
                 command.Apply();
                 ExecutedCommands.Add(command);
             }
-            
+
+            if (RequestQueue.Count > 0)
+            {
+                var command = RequestQueue.Dequeue();
+                ClientProcessing.client.SendRequest(command.Serialize());
+            }
+
             if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z) && ExecutedCommands.Count > 0)
             {
                 Undo();

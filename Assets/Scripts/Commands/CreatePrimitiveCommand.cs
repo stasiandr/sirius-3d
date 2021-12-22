@@ -61,10 +61,10 @@ namespace Commands
             SceneData.ObjectsByID.Remove(MyObjID);
         }
 
-        public static string Serialize(CreatePrimitiveCommand command)
+        public string Serialize()
         {
             JObject json = new JObject(new JProperty("CommandType", "CreatePrimitive"),
-                new JProperty("MeshType", command.MeshType));
+                new JProperty("MeshType", this.MeshType));
             return json.ToString();
         }
 
