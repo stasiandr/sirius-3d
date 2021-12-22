@@ -550,6 +550,7 @@ GameObject:
   - component: {fileID: 159960788}
   - component: {fileID: 159960787}
   - component: {fileID: 159960786}
+  - component: {fileID: 159960790}
   m_Layer: 5
   m_Name: Upload button
   m_TagString: Untagged
@@ -635,10 +636,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 159960786}
-        m_TargetAssemblyTypeName: UIController.UploadObjectButton, Assembly-CSharp
-        m_MethodName: UploadObject
-        m_Mode: 5
+      - m_Target: {fileID: 159960790}
+        m_TargetAssemblyTypeName: FileUploader, Assembly-CSharp
+        m_MethodName: Upload
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -685,6 +686,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 159960784}
   m_CullTransparentMesh: 1
+--- !u!114 &159960790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159960784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7819c899d7f36d846961eb91ba609203, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &163299357
 GameObject:
   m_ObjectHideFlags: 0
@@ -1404,13 +1417,13 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 5
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
+  m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
 --- !u!114 &247964547
 MonoBehaviour:
@@ -1660,49 +1673,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477263884}
   m_CullTransparentMesh: 1
---- !u!1 &478178374
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 478178376}
-  - component: {fileID: 478178375}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &478178375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 478178374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7819c899d7f36d846961eb91ba609203, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &478178376
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 478178374}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 605.45605, y: 376.09412, z: -419.51205}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &513433473
 GameObject:
   m_ObjectHideFlags: 0
