@@ -4,6 +4,8 @@ using UnityEngine;
 using SceneProvider;
 using MeshTools;
 using Newtonsoft.Json.Linq;
+using UIController;
+using UnityEngine.UI;
 
 namespace Commands
 {
@@ -11,12 +13,13 @@ namespace Commands
     {
         public string name;
         public string path;
-        public MyMesh uploadedMesh; 
+        public MyMesh uploadedMesh;
+
 
         public UploadObjectCommand(string _name, string _path = "") {
             name = _name;
             if (_path == "") {
-                path = FilePath(name);
+                return;
             } else {
                 path = _path;
             }
@@ -54,11 +57,12 @@ namespace Commands
         public void Apply()
         {
             SceneData.UploadedMeshes[name] = uploadedMesh;
-        }
 
-        public string FilePath(string name)
-        {
-            return "Assets/Models/" + name + ".obj";
+            var new_button = GameObject.Instantiate(SceneData.create_button_prefab);
+            new_button.transform.parent = SceneData.buttons_scrollview_transform;
+            new_button.transform.localScale = Vector3.one;
+            new_button.GetComponent<CreateUploadedButton>().Name = name;
+            new_button.transform.GetChild(0).GetComponent<Text>().text = name;
         }
 
         public void Revert()
@@ -81,7 +85,7 @@ namespace Commands
         public static UploadObjectCommand Deserialize(string str)
         {
             JObject json = JObject.Parse(str);
-            UploadObjectCommand command = new UploadObjectCommand(json["name"].Value<string>(), json["path"].Value<string>());
+            UploadObjectCommand command = new UploadObjectCommand(json["name"].Value<string>(), "");
             command.uploadedMesh = new MyMesh();
             JArray vert = json["Vertices"].Value<JArray>();
             command.uploadedMesh.Vertices = new List<Vector3>();
