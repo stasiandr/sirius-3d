@@ -154,7 +154,7 @@ namespace MeshTools
             return mesh;
         }
 
-        public static MyMesh GenerateTorus(Vector3 pos = default, float r1 = 0.5f, float r2 = 1.5f, int vert1 = 20, int vert2 = 10)
+        public static MyMesh GenerateTorus(Vector3 pos = default, float r1 = 0.5f, float r2 = 1.5f, int vert1 = 30, int vert2 = 15)
         {
             var mesh = new MyMesh
             {

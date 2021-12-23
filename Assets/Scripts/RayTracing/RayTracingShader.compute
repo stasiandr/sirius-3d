@@ -108,12 +108,16 @@ RayHit CreateRayHit()
 bool IntersectBox(Ray ray, Object box){
 	// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
 	// r.org is origin of ray
-	float t1 = (box.lb.x - ray.origin.x) / ray.direction.x;
-	float t2 = (box.rt.x - ray.origin.x) / ray.direction.x;
-	float t3 = (box.lb.y - ray.origin.y) / ray.direction.y;
-	float t4 = (box.rt.y - ray.origin.y) / ray.direction.y;
-	float t5 = (box.lb.z - ray.origin.z) / ray.direction.z;
-	float t6 = (box.rt.z - ray.origin.z) / ray.direction.z;
+	float rdx = 1.0 / ray.direction.x;
+	float rdy = 1.0 / ray.direction.y;
+	float rdz = 1.0 / ray.direction.z;
+
+	float t1 = (box.lb.x - ray.origin.x) * rdx;
+	float t2 = (box.rt.x - ray.origin.x) * rdx;
+	float t3 = (box.lb.y - ray.origin.y) * rdy;
+	float t4 = (box.rt.y - ray.origin.y) * rdy;
+	float t5 = (box.lb.z - ray.origin.z) * rdz;
+	float t6 = (box.rt.z - ray.origin.z) * rdz;
 
 	float tmin = max(max(min(t1, t2), min(t3, t4)), min(t5, t6));
 	float tmax = min(min(max(t1, t2), max(t3, t4)), max(t5, t6));
@@ -230,8 +234,8 @@ bool IntersectTriangle_MT97(Ray ray, Triangle T,
 
 void IntersectObject(Ray ray, inout RayHit bestHit, Object obj) {
 	if (IntersectBox(ray, obj)) {
-		float t, u, v;
 		for (uint i = obj.triangles_start; i < obj.triangles_start + obj.triangles_count; i++) {
+			float t, u, v;
 			if (IntersectTriangle_MT97(ray, _Triangles[i], t, u, v))
 			{
 				if (t > 0 && t < bestHit.distance)
@@ -239,10 +243,10 @@ void IntersectObject(Ray ray, inout RayHit bestHit, Object obj) {
 					bestHit.distance = t;
 					bestHit.position = ray.origin + t * ray.direction;
 					bestHit.normal = normalize(cross(_Triangles[i].v1 - _Triangles[i].v0, _Triangles[i].v2 - _Triangles[i].v0));
-					bestHit.albedo = obj.albedo;
-					bestHit.specular = obj.specular;
-					bestHit.smoothness = obj.smoothness;
-					bestHit.emission = obj.emission;
+					bestHit.albedo = _Triangles[i].albedo;
+					bestHit.specular = _Triangles[i].specular;
+					bestHit.smoothness = _Triangles[i].smoothness;
+					bestHit.emission = _Triangles[i].emission;
 				}
 			}
 		}
@@ -251,7 +255,7 @@ void IntersectObject(Ray ray, inout RayHit bestHit, Object obj) {
 
 float SmoothnessToPhongAlpha(float s)
 {
-	return pow(1000.0f, s * s);
+	return pow(5000.0f, s * s);
 }
 
 bool render_spheres = true;
@@ -266,11 +270,12 @@ RayHit Trace(Ray ray)
 			IntersectSphere(ray, bestHit, _Spheres[i]);
 	}
 	uint numObjects;
+	int cnt = 0;
 	_Objects.GetDimensions(numObjects, stride);
 	for (uint j = 0; j < numObjects; j++) {
 		IntersectObject(ray, bestHit, _Objects[j]);
 	}
-	IntersectGroundPlane(ray, bestHit);
+	//IntersectGroundPlane(ray, bestHit);
 	return bestHit;
 }
 
@@ -346,7 +351,7 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 	// Get a ray for the UVs
 	Ray ray = CreateCameraRay(uv);
 	float3 result = float3(0, 0, 0);
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		RayHit hit = Trace(ray);
 		result += ray.energy * Shade(ray, hit);
