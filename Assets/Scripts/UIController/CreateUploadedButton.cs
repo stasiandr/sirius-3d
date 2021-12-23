@@ -11,7 +11,7 @@ namespace UIController
 
         public void CreateUploadedByName()
         {
-            SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand(Name));
+            SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand(Name));
         }
     }
 }
