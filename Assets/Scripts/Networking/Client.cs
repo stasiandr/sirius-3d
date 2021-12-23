@@ -33,7 +33,7 @@ namespace Core.Scripts.Networking
 
         private void StartClient(string IP)
         {
-            _webSocket = WebSocketFactory.CreateInstance(IP);
+            _webSocket = WebSocketFactory.CreateInstance(IP + ":8123");
 
             _webSocket.OnMessage += WebSocketOnMessage;
             _webSocket.OnOpen += () => WebSocketsConnected?.Invoke();
