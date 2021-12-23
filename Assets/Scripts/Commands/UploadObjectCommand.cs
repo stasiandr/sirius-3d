@@ -4,6 +4,8 @@ using UnityEngine;
 using SceneProvider;
 using MeshTools;
 using Newtonsoft.Json.Linq;
+using UIController;
+using UnityEngine.UI;
 
 namespace Commands
 {
@@ -11,7 +13,10 @@ namespace Commands
     {
         public string name;
         public string path;
-        public MyMesh uploadedMesh; 
+        public MyMesh uploadedMesh;
+
+        public GameObject Button;
+        public Transform scrollview_transform;
 
         public UploadObjectCommand(string _name, string _path = "") {
             name = _name;
@@ -54,6 +59,12 @@ namespace Commands
         public void Apply()
         {
             SceneData.UploadedMeshes[name] = uploadedMesh;
+
+            var new_button = GameObject.Instantiate(Button);
+            new_button.transform.parent = scrollview_transform;
+            new_button.transform.localScale = Vector3.one;
+            new_button.GetComponent<CreateUploadedButton>().Name = name;
+            new_button.transform.GetChild(0).GetComponent<Text>().text = name;
         }
 
         public string FilePath(string name)

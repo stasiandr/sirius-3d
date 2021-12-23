@@ -76,3 +76,4 @@ crashlytics-build.properties
 #TMP
 Assets/TextMesh*
 
+ProjectSettings/ProjectVersion.txt
