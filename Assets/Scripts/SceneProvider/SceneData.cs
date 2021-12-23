@@ -85,9 +85,9 @@ namespace SceneProvider
             Targets = new List<GameObject>();
             NewObjID = 0;
             ObjectsByID = new Dictionary<int, GameObject>();
-            HasStarted = false;
+            // HasStarted = false;
             SinglePlayer = false;
-            ClientProcessing.client = new Core.Scripts.Networking.Client();
+            // ClientProcessing.client = new Core.Scripts.Networking.Client();
         }
 
         public void Update()
@@ -96,10 +96,10 @@ namespace SceneProvider
             {
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.Delete))
-            {
-                RequestQueue.Enqueue(new DeleteCommand(Targets));
-            }
+            // if (Input.GetKeyDown(KeyCode.Delete))
+            // {
+            //     RequestQueue.Enqueue(new DeleteCommand(Targets));
+            // }
 
             if (RequestQueue.Count > 0)
             {

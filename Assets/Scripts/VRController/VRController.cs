@@ -127,7 +127,7 @@ namespace VRController
                 var tempPosition = obj.transform.position;
                 var tempRotation = obj.transform.rotation;
 
-                SceneData.ExecutionQueue.Enqueue
+                SceneData.RequestQueue.Enqueue
                     (
                     new Commands.TransformCommand
                         (
@@ -136,7 +136,7 @@ namespace VRController
                         )
                     );
 
-                SceneData.ExecutionQueue.Enqueue
+                SceneData.RequestQueue.Enqueue
                     (
                         new Commands.RotateCommand
                             (
