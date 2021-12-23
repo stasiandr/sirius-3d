@@ -6,6 +6,7 @@ using MeshTools;
 using Newtonsoft.Json.Linq;
 using UIController;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Commands
 {
@@ -92,7 +93,7 @@ namespace Commands
             new_button.transform.parent = SceneData.buttons_scrollview_transform;
             new_button.transform.localScale = Vector3.one;
             new_button.GetComponent<CreateUploadedButton>().Name = name;
-            new_button.transform.GetChild(0).GetComponent<Text>().text = name;
+            new_button.transform.GetChild(0).GetComponent<TMP_Text>().text = name;
         }
 
         public void Revert()

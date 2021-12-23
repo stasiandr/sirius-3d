@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SceneProvider;
+using TMPro;
 
 namespace UIController
 {
     public class TRSScale : MonoBehaviour
     {
-        public InputField posX, posY, posZ;
+        public TMP_InputField posX, posY, posZ;
         private List<GameObject> Targets;
 
         public void Start()

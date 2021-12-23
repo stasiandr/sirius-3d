@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SceneProvider;
+using TMPro;
 
 namespace UIController
 {
     public class TRSRotate : MonoBehaviour
     {
-        public InputField posX, posY, posZ;
+        public TMP_InputField posX, posY, posZ;
         private List<GameObject> Targets;
 
         public void Start()
@@ -27,6 +28,7 @@ namespace UIController
                 return;
             }
             var target = Targets[0];
+            print(target);
             posX.SetTextWithoutNotify(target.transform.rotation.eulerAngles.x.ToString());
             posY.SetTextWithoutNotify(target.transform.rotation.eulerAngles.y.ToString());
             posZ.SetTextWithoutNotify(target.transform.rotation.eulerAngles.z.ToString());

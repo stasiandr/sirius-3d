@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SceneProvider;
+using TMPro;
 
 namespace UIController
 {
     public class TRSTransform : MonoBehaviour
     {
-        public InputField posX, posY, posZ;
+        public TMP_InputField posX, posY, posZ;
         private List<GameObject> Targets;
 
         public void Start()

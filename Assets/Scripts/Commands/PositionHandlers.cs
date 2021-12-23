@@ -21,7 +21,7 @@ public class PositionHandlers : MonoBehaviour
 
 
     void Start() {
-        PosText = GameObject.Find("TRSUI").GetComponent<TRSTransform>();
+        PosText = GameObject.Find("TRSMaster").GetComponent<TRSTransform>();
     }
 
     void Update()
