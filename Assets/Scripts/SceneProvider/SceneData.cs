@@ -22,8 +22,14 @@ namespace SceneProvider
         static int NewObjID = 0;
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
 
+        public static GameObject create_button_prefab;
+        public static Transform buttons_scrollview_transform;
+        public GameObject _create_button_prefab;
+        public Transform _buttons_scrollview_transform;
         public void OnEnable()
         {
+            create_button_prefab = _create_button_prefab;
+            buttons_scrollview_transform = _buttons_scrollview_transform;
             CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
         }
 

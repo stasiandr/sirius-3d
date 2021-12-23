@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465782, g: 0.49641252, b: 0.5748167, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -590,8 +590,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 023b924794f09ef4db114ca5150de7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Button: {fileID: 7493775560109617432, guid: b67876e634e46f54f92bbb4870508353, type: 3}
-  scrollview_transform: {fileID: 247964545}
 --- !u!114 &159960787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2923,6 +2921,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7decbe9ca6634f7a8d762ecb24d0db5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _create_button_prefab: {fileID: 7493775560109617432, guid: b67876e634e46f54f92bbb4870508353, type: 3}
+  _buttons_scrollview_transform: {fileID: 247964545}
   defaultMaterial: {fileID: 2100000, guid: aebf1362e1015594aa97da5bfb2640f6, type: 2}
   selectedMaterial: {fileID: 2100000, guid: 7fb4a5d705adc4d4da7fa0f1df693ea2, type: 2}
 --- !u!4 &871185483
@@ -3526,7 +3526,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 151670642}
   m_HandleRect: {fileID: 151670641}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

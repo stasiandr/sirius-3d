@@ -15,8 +15,6 @@ namespace Commands
         public string path;
         public MyMesh uploadedMesh;
 
-        public GameObject Button;
-        public Transform scrollview_transform;
 
         public UploadObjectCommand(string _name, string _path = "") {
             name = _name;
@@ -60,8 +58,8 @@ namespace Commands
         {
             SceneData.UploadedMeshes[name] = uploadedMesh;
 
-            var new_button = GameObject.Instantiate(Button);
-            new_button.transform.parent = scrollview_transform;
+            var new_button = GameObject.Instantiate(SceneData.create_button_prefab);
+            new_button.transform.parent = SceneData.buttons_scrollview_transform;
             new_button.transform.localScale = Vector3.one;
             new_button.GetComponent<CreateUploadedButton>().Name = name;
             new_button.transform.GetChild(0).GetComponent<Text>().text = name;
