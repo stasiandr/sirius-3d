@@ -21,19 +21,19 @@ namespace Core.Scripts.Networking
 
         private bool _initializedFlag;
 
-        public void Init()
+        public void Init(string IP)
         {
             if (_initializedFlag)
                 return;
 
-            StartClient();
+            StartClient(IP);
 
             _initializedFlag = true;
         }
 
-        private void StartClient()
+        private void StartClient(string IP)
         {
-            _webSocket = WebSocketFactory.CreateInstance("ws://127.0.0.1:8123");
+            _webSocket = WebSocketFactory.CreateInstance(IP + ":8123");
 
             _webSocket.OnMessage += WebSocketOnMessage;
             _webSocket.OnOpen += () => WebSocketsConnected?.Invoke();

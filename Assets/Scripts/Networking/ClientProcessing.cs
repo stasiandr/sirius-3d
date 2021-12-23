@@ -6,11 +6,11 @@ using SceneProvider;
 using Commands;
 using Newtonsoft.Json.Linq;
 
-public class ClientProcessing : MonoBehaviour
+public class ClientProcessing
 {
     public static Client client = new Client();
 
-    public void ProcessMessage(string message)
+    public static void ProcessMessage(string message)
     {
         Debug.Log(message);
         string commandType = JObject.Parse(message)["CommandType"].Value<string>();
@@ -31,19 +31,31 @@ public class ClientProcessing : MonoBehaviour
             case "CreatePrimitive":
                 SceneData.ExecutionQueue.Enqueue(CreatePrimitiveCommand.Deserialize(message));
                 break;
+            case "UploadObject":
+                SceneData.ExecutionQueue.Enqueue(UploadObjectCommand.Deserialize(message));
+                break;
         }
     }
 
-    IEnumerator Start()
+    public static IEnumerator Activate(string str)
     {
-        client = new Client();
-        client.MessageReceived += ProcessMessage;
-        client.Init();
-
-        yield return null;
-
-        while (!client.IsOpen)
+        Debug.Log("HEH");
+        SceneData.HasStarted = true;
+        if (str == "SinglePlayer")
+        {
+            SceneData.SinglePlayer = true;
             yield return null;
+        }
+        else
+        {
+            client.MessageReceived += ProcessMessage;
+            client.Init(str);
+
+            yield return null;
+
+            while (!client.IsOpen)
+                yield return null;
+        }
     }
 
     void Update()

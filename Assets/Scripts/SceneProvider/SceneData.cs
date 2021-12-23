@@ -17,6 +17,7 @@ namespace SceneProvider
         public static List<GameObject> Targets = new List<GameObject>();
         public static event Action<List<GameObject>> ObjectsSelected;
         public static Dictionary<string, MyMesh> UploadedMeshes = new Dictionary<string, MyMesh>();
+        public static bool HasStarted, SinglePlayer;
         
         static int NewObjID = 0;
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
@@ -75,25 +76,40 @@ namespace SceneProvider
             Targets = new List<GameObject>();
             NewObjID = 0;
             ObjectsByID = new Dictionary<int, GameObject>();
+            HasStarted = false;
+            SinglePlayer = false;
+            ClientProcessing.client = new Core.Scripts.Networking.Client();
         }
 
         public void Update()
         {
+            if (!HasStarted)
+            {
+                return;
+            }
             if (Input.GetKeyDown(KeyCode.Delete))
             {
                 RequestQueue.Enqueue(new DeleteCommand(Targets));
-            }
-            if (ExecutionQueue.Count > 0)
-            {
-                var command = ExecutionQueue.Dequeue();
-                command.Apply();
-                ExecutedCommands.Add(command);
             }
 
             if (RequestQueue.Count > 0)
             {
                 var command = RequestQueue.Dequeue();
-                ClientProcessing.client.SendRequest(command.Serialize());
+                if (SinglePlayer)
+                {
+                    ExecutionQueue.Enqueue(command);
+                }
+                else
+                {
+                    ClientProcessing.client.SendRequest(command.Serialize());
+                }
+            }
+
+            if (ExecutionQueue.Count > 0)
+            {
+                var command = ExecutionQueue.Dequeue();
+                command.Apply();
+                ExecutedCommands.Add(command);
             }
 
             if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z) && ExecutedCommands.Count > 0)

@@ -13,7 +13,7 @@ namespace UIController
         public Transform scrollview_transform;
         public void UploadObject(string name, string path = "")
         {
-            SceneData.ExecutionQueue.Enqueue(new UploadObjectCommand(name, path));
+            SceneData.RequestQueue.Enqueue(new UploadObjectCommand(name, path));
             var new_button = Instantiate(Button);
             new_button.transform.parent = scrollview_transform;
             new_button.transform.localScale = Vector3.one;
