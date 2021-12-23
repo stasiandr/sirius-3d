@@ -21,7 +21,7 @@ namespace Commands
         public UploadObjectCommand(string _name, string _path = "") {
             name = _name;
             if (_path == "") {
-                path = FilePath(name);
+                return;
             } else {
                 path = _path;
             }
@@ -67,11 +67,6 @@ namespace Commands
             new_button.transform.GetChild(0).GetComponent<Text>().text = name;
         }
 
-        public string FilePath(string name)
-        {
-            return "Assets/Models/" + name + ".obj";
-        }
-
         public void Revert()
         {
             throw new System.NotImplementedException(); ;
@@ -92,7 +87,7 @@ namespace Commands
         public static UploadObjectCommand Deserialize(string str)
         {
             JObject json = JObject.Parse(str);
-            UploadObjectCommand command = new UploadObjectCommand(json["name"].Value<string>(), json["path"].Value<string>());
+            UploadObjectCommand command = new UploadObjectCommand(json["name"].Value<string>(), "");
             command.uploadedMesh = new MyMesh();
             JArray vert = json["Vertices"].Value<JArray>();
             command.uploadedMesh.Vertices = new List<Vector3>();
