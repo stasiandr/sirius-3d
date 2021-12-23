@@ -748,8 +748,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 023b924794f09ef4db114ca5150de7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Button: {fileID: 7493775560109617432, guid: b67876e634e46f54f92bbb4870508353, type: 3}
-  scrollview_transform: {fileID: 247964545}
 --- !u!114 &159960787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3850,6 +3848,8 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 840098e232de57c4892811bffbdfdc1a, type: 2}
   - {fileID: 2100000, guid: fc3cd8fa227fb6841b55904edae1d4bb, type: 2}
   - {fileID: 2100000, guid: 10a8987200623694287c66a2e69b41ff, type: 2}
+  _create_button_prefab: {fileID: 7493775560109617432, guid: b67876e634e46f54f92bbb4870508353, type: 3}
+  _buttons_scrollview_transform: {fileID: 247964545}
   defaultMaterial: {fileID: 2100000, guid: aebf1362e1015594aa97da5bfb2640f6, type: 2}
   selectedMaterial: {fileID: 2100000, guid: 7fb4a5d705adc4d4da7fa0f1df693ea2, type: 2}
 --- !u!4 &871185483
@@ -4678,8 +4678,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 151670642}
   m_HandleRect: {fileID: 151670641}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 0.99999994
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8829,8 +8829,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2067716763}
-        m_TargetAssemblyTypeName: UIController.IPInputField, Assembly-CSharp
-        m_MethodName: Activate
+        m_TargetAssemblyTypeName: ClientProcessing, Assembly-CSharp
+        m_MethodName: Enter
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8898,10 +8898,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2067716758}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 890a7b6d01e96a045bfc58147e2187b9, type: 3}
+  m_Script: {fileID: 11500000, guid: aded1d78c7e8120468da08093afa4dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  input: {fileID: 2067716760}
 --- !u!1 &2137387332
 GameObject:
   m_ObjectHideFlags: 0
