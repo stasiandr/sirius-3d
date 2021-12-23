@@ -7,7 +7,6 @@ namespace MeshTools
     {
         public List<Vector3> Vertices;
         public List<int> Triangles;
-
         public Mesh ToUnityMesh()
         {
             var mesh = new Mesh

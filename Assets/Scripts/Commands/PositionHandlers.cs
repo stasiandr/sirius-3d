@@ -5,6 +5,7 @@ using Commands;
 using SceneProvider;
 using System.Linq;
 using System;
+using UIController;
 
 public class PositionHandlers : MonoBehaviour
 {
@@ -15,6 +16,14 @@ public class PositionHandlers : MonoBehaviour
     Vector3 EndPos;
     Vector3 StartMousePos;
     bool selected = false;
+
+    private TRSTransform PosText;
+
+
+    void Start() {
+        PosText = GameObject.Find("TRSUI").GetComponent<TRSTransform>();
+    }
+
     void Update()
     {
         transform.localScale = Vector3.one * (transform.position - (new Plane(Camera.main.transform.forward, Camera.main.transform.position).ClosestPointOnPlane(transform.position))).magnitude;
@@ -52,6 +61,7 @@ public class PositionHandlers : MonoBehaviour
             {
                 obj.transform.position = ObjStartPos[Convert.ToInt32(obj.name)] + GetMousePoint() - StartMousePos;
             }
+            PosText.ObjectSelected(SceneData.Targets);
             transform.position = StartPos + GetMousePoint() - StartMousePos;
         }
     }

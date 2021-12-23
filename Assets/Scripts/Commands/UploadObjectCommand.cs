@@ -30,7 +30,9 @@ namespace Commands
                 var mesh = obj.GetComponent<MeshFilter>().mesh;
                 new_mesh.Vertices = new List<Vector3>();
                 foreach (var ver in mesh.vertices)
+                {
                     new_mesh.Vertices.Add(ver);
+                }
                 new_mesh.Triangles = new List<int>();
                 foreach (var tr in mesh.triangles)
                     new_mesh.Triangles.Add(tr);
@@ -48,6 +50,34 @@ namespace Commands
                     foreach (var tr in mesh.triangles)
                         new_mesh.Triangles.Add(tr + N);
                     N += mesh.vertices.Length;
+                }
+            }
+            Vector3 lb = new Vector3(100000, 100000, 100000);
+            Vector3 rt = new Vector3(-100000, -100000, -100000);
+            foreach (var ver in new_mesh.Vertices)
+            {
+                if (lb.x > ver.x)
+                    lb.x = ver.x;
+                if (lb.y > ver.y)
+                    lb.y = ver.y;
+                if (lb.z > ver.z)
+                    lb.z = ver.z;
+                if (rt.x < ver.x)
+                    rt.x = ver.x;
+                if (rt.y < ver.y)
+                    rt.y = ver.y;
+                if (rt.z < ver.z)
+                    rt.z = ver.z;
+            }
+            for (int i = 0; i < new_mesh.Vertices.Count; ++i)
+            {
+                new_mesh.Vertices[i] -= lb;
+            }
+            if ((lb - rt).sqrMagnitude > 20000)
+            {
+                for (int i = 0; i < new_mesh.Vertices.Count; ++i)
+                {
+                    new_mesh.Vertices[i] /= 100;
                 }
             }
             uploadedMesh = new_mesh;
