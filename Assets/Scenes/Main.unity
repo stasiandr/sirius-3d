@@ -1504,7 +1504,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1112636062}
   m_HandleRect: {fileID: 1112636061}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -7102,7 +7102,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: None
+  m_Text: Default (white)
 --- !u!222 &758910969
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14668,6 +14668,7 @@ GameObject:
   - component: {fileID: 1444344717}
   - component: {fileID: 1444344716}
   - component: {fileID: 1444344715}
+  - component: {fileID: 1444344718}
   m_Layer: 0
   m_Name: Dropdown
   m_TagString: Untagged
@@ -14746,23 +14747,37 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: None
+    - m_Text: Default (white)
+      m_Image: {fileID: 0}
+    - m_Text: Red
+      m_Image: {fileID: 0}
+    - m_Text: Green
+      m_Image: {fileID: 0}
+    - m_Text: Blue
       m_Image: {fileID: 0}
     - m_Text: Metal
       m_Image: {fileID: 0}
-    - m_Text: Emissive
+    - m_Text: Gold
       m_Image: {fileID: 0}
-    - m_Text: Option C
+    - m_Text: Black
       m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
-    - m_Text: Option C
+    - m_Text: Lamp
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1444344718}
+        m_TargetAssemblyTypeName: MaterialSelectButton, Assembly-CSharp
+        m_MethodName: PickMaterial
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &1444344716
 MonoBehaviour:
@@ -14802,6 +14817,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1444344713}
   m_CullTransparentMesh: 1
+--- !u!114 &1444344718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1444344713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f479298611b5dbd4f818fa94f7b59626, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1445702394
 GameObject:
   m_ObjectHideFlags: 0
