@@ -2015,11 +2015,11 @@ MonoBehaviour:
       - m_Target: {fileID: 513058374}
         m_TargetAssemblyTypeName: MaterialSelectButton, Assembly-CSharp
         m_MethodName: PickMaterial
-        m_Mode: 2
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 2100000, guid: 10a8987200623694287c66a2e69b41ff, type: 2}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 7
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2237,14 +2237,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 520955450}
+      - m_Target: {fileID: 513058374}
         m_TargetAssemblyTypeName: MaterialSelectButton, Assembly-CSharp
         m_MethodName: PickMaterial
-        m_Mode: 2
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 2100000, guid: 38b5e542bdd691842994b783db25ca08, type: 2}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2529,14 +2529,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 527646209}
+      - m_Target: {fileID: 513058374}
         m_TargetAssemblyTypeName: MaterialSelectButton, Assembly-CSharp
         m_MethodName: PickMaterial
-        m_Mode: 2
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 2100000, guid: cdb46dec70d88764883166a1308304b4, type: 2}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -3841,6 +3841,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7decbe9ca6634f7a8d762ecb24d0db5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Materials:
+  - {fileID: 2100000, guid: aebf1362e1015594aa97da5bfb2640f6, type: 2}
+  - {fileID: 2100000, guid: 2aa45a4ee992c7444a5838f62c9a2fa8, type: 2}
+  - {fileID: 2100000, guid: cdb46dec70d88764883166a1308304b4, type: 2}
+  - {fileID: 2100000, guid: 38b5e542bdd691842994b783db25ca08, type: 2}
+  - {fileID: 2100000, guid: 7bff18e39fb861445a9fc0f7a77878b8, type: 2}
+  - {fileID: 2100000, guid: 840098e232de57c4892811bffbdfdc1a, type: 2}
+  - {fileID: 2100000, guid: fc3cd8fa227fb6841b55904edae1d4bb, type: 2}
+  - {fileID: 2100000, guid: 10a8987200623694287c66a2e69b41ff, type: 2}
   defaultMaterial: {fileID: 2100000, guid: aebf1362e1015594aa97da5bfb2640f6, type: 2}
   selectedMaterial: {fileID: 2100000, guid: 7fb4a5d705adc4d4da7fa0f1df693ea2, type: 2}
 --- !u!4 &871185483
@@ -4271,10 +4280,10 @@ MonoBehaviour:
       - m_Target: {fileID: 957046720}
         m_TargetAssemblyTypeName: MaterialSelectButton, Assembly-CSharp
         m_MethodName: PickMaterial
-        m_Mode: 2
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 2100000, guid: aebf1362e1015594aa97da5bfb2640f6, type: 2}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4669,8 +4678,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 151670642}
   m_HandleRect: {fileID: 151670641}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 1
+  m_Value: 0
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5362,14 +5371,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1225640899}
+      - m_Target: {fileID: 513058374}
         m_TargetAssemblyTypeName: MaterialSelectButton, Assembly-CSharp
         m_MethodName: PickMaterial
-        m_Mode: 2
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 2100000, guid: fc3cd8fa227fb6841b55904edae1d4bb, type: 2}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -7352,11 +7361,11 @@ MonoBehaviour:
       - m_Target: {fileID: 1523266411}
         m_TargetAssemblyTypeName: MaterialSelectButton, Assembly-CSharp
         m_MethodName: PickMaterial
-        m_Mode: 2
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 2100000, guid: 2aa45a4ee992c7444a5838f62c9a2fa8, type: 2}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -7807,14 +7816,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1715153685}
+      - m_Target: {fileID: 513058374}
         m_TargetAssemblyTypeName: MaterialSelectButton, Assembly-CSharp
         m_MethodName: PickMaterial
-        m_Mode: 2
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 2100000, guid: 840098e232de57c4892811bffbdfdc1a, type: 2}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -8164,14 +8173,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1895842468}
+      - m_Target: {fileID: 513058374}
         m_TargetAssemblyTypeName: MaterialSelectButton, Assembly-CSharp
         m_MethodName: PickMaterial
-        m_Mode: 2
+        m_Mode: 3
         m_Arguments:
-          m_ObjectArgument: {fileID: 2100000, guid: 7bff18e39fb861445a9fc0f7a77878b8, type: 2}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
-          m_IntArgument: 0
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

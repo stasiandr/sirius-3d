@@ -19,14 +19,17 @@ namespace SceneProvider
         public static event Action<List<GameObject>> ObjectsSelected;
         public static Dictionary<string, MyMesh> UploadedMeshes = new Dictionary<string, MyMesh>();
         public static bool HasStarted, SinglePlayer;
-        public static Material CurrentMaterial;
+        public static int CurrentMaterial;
+        public static List<Material> Materials;
         
         static int NewObjID = 0;
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
+        public List<Material> _Materials;
 
         public void OnEnable()
         {
-            CurrentMaterial = defaultMaterial;
+            Materials = _Materials;
+            CurrentMaterial = 0;
             CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
         }
 
@@ -132,7 +135,7 @@ namespace SceneProvider
             ExecutedCommands.RemoveAt(ExecutedCommands.Count - 1);
         }
 
-        public static int CreateMesh(MyMesh mesh)
+        public static int CreateMesh(MyMesh mesh, int MatID = 0)
         {
             var go = new GameObject
             {
@@ -145,7 +148,7 @@ namespace SceneProvider
 
             var meshCollider = go.AddComponent<MeshCollider>();
 
-            go.AddComponent<MeshRenderer>().sharedMaterial = CurrentMaterial;
+            go.AddComponent<MeshRenderer>().sharedMaterial = Materials[MatID];
             ObjectsByID[NewObjID] = go;
             NewObjID++;
             return NewObjID - 1;

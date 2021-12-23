@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MaterialSelectButton : MonoBehaviour
 {
-    public void PickMaterial(Material mat)
+    public void PickMaterial(int mat)
     {
         SceneData.CurrentMaterial = mat;
     }

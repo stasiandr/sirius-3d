@@ -13,6 +13,7 @@ namespace Commands
         public Vector3 Scale;
         public int Details;
         public int Details2;
+        public int MaterialID;
         int MyObjID;
         public CreatePrimitiveCommand(string meshType, Vector3 pos = default, Vector3 scale = default)
         {
@@ -25,6 +26,7 @@ namespace Commands
             Details = 10;
             Details2 = 10;
             MyObjID = 0;
+            MaterialID = 0;
         }
 
         public void Apply()
@@ -60,7 +62,7 @@ namespace Commands
                     }
                     break;
             }
-            MyObjID = SceneData.CreateMesh(mesh);
+            MyObjID = SceneData.CreateMesh(mesh, MaterialID);
         }
 
         public void Revert()
