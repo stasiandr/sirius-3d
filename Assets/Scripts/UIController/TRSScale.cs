@@ -37,7 +37,7 @@ namespace UIController
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.ScaleCommand(Targets, 
+            SceneData.RequestQueue.Enqueue(new Commands.ScaleCommand(Targets, 
                 new Vector3(newpos / Targets[0].transform.localScale.x, 1, 1)));
         }
 
@@ -47,7 +47,7 @@ namespace UIController
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.ScaleCommand(Targets,
+            SceneData.RequestQueue.Enqueue(new Commands.ScaleCommand(Targets,
                 new Vector3(1, newpos / Targets[0].transform.localScale.y, 1)));
         }
 
@@ -57,7 +57,7 @@ namespace UIController
             {
                 return;
             }
-            SceneData.ExecutionQueue.Enqueue(new Commands.ScaleCommand(Targets,
+            SceneData.RequestQueue.Enqueue(new Commands.ScaleCommand(Targets,
                 new Vector3(1, 1, newpos / Targets[0].transform.localScale.z)));
         }
     }

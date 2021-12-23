@@ -113,6 +113,6 @@ public class PositionHandlers : MonoBehaviour
         }
         selected = false;
         EndPos = transform.position;
-        SceneData.ExecutionQueue.Enqueue(new TransformCommand(SceneData.Targets, EndPos - StartPos));
+        SceneData.RequestQueue.Enqueue(new TransformCommand(SceneData.Targets, EndPos - StartPos));
     }
 }

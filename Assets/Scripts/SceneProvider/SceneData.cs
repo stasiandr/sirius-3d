@@ -12,9 +12,13 @@ namespace SceneProvider
     public class SceneData : MonoBehaviour
     {
         public static Queue<ICommand> ExecutionQueue = new Queue<ICommand>();
+        public static Queue<ICommand> RequestQueue = new Queue<ICommand>();
         public static List<ICommand> ExecutedCommands = new List<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
         public static event Action<List<GameObject>> ObjectsSelected;
+        public static Dictionary<string, MyMesh> UploadedMeshes = new Dictionary<string, MyMesh>();
+        public static bool HasStarted, SinglePlayer;
+        
         static int NewObjID = 0;
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
 
@@ -58,32 +62,56 @@ namespace SceneProvider
             ObjectsSelected?.Invoke(Targets);
         }
 
-        private static SceneData _instance;
+        public static SceneData _instance;
 
         public Material defaultMaterial;
         public Material selectedMaterial;
 
         private void Start()
         {
+            ExecutionQueue = new Queue<ICommand>();
+            RequestQueue = new Queue<ICommand>();
+            ExecutedCommands = new List<ICommand>();
             _instance = this;
             Targets = new List<GameObject>();
             NewObjID = 0;
             ObjectsByID = new Dictionary<int, GameObject>();
+            HasStarted = false;
+            SinglePlayer = false;
+            ClientProcessing.client = new Core.Scripts.Networking.Client();
         }
 
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
+            if (!HasStarted)
             {
-                ExecutionQueue.Enqueue(new DeleteCommand(Targets));
+                return;
             }
+            if (Input.GetKeyDown(KeyCode.Delete))
+            {
+                RequestQueue.Enqueue(new DeleteCommand(Targets));
+            }
+
+            if (RequestQueue.Count > 0)
+            {
+                var command = RequestQueue.Dequeue();
+                if (SinglePlayer)
+                {
+                    ExecutionQueue.Enqueue(command);
+                }
+                else
+                {
+                    ClientProcessing.client.SendRequest(command.Serialize());
+                }
+            }
+
             if (ExecutionQueue.Count > 0)
             {
                 var command = ExecutionQueue.Dequeue();
                 command.Apply();
                 ExecutedCommands.Add(command);
             }
-            
+
             if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z) && ExecutedCommands.Count > 0)
             {
                 Undo();

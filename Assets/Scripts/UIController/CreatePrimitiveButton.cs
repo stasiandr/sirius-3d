@@ -12,22 +12,22 @@ namespace UIController
             switch(id)
             {
                 case 0:
-                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Cube"));
+                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Cube"));
                     break;
                 case 1:
-                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Sphere"));
+                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Sphere"));
                     break;
                 case 2:
-                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Cone"));
+                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Cone"));
                     break;
                 case 3:
-                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Cylinder"));
+                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Cylinder"));
                     break;
                 case 4:
-                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Torus"));
+                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Torus"));
                     break;
                 case 5:
-                    SceneData.ExecutionQueue.Enqueue(new CreatePrimitiveCommand("Plane"));
+                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Plane"));
                     break;
                 default:
                     throw new NotImplementedException();
