@@ -74,7 +74,8 @@ namespace Commands
         public string Serialize()
         {
             JObject json = new JObject(new JProperty("CommandType", "CreatePrimitive"),
-                new JProperty("MeshType", this.MeshType));
+                new JProperty("MeshType", this.MeshType),
+                new JProperty("MaterialID", this.MaterialID));
             return json.ToString();
         }
 
@@ -83,6 +84,7 @@ namespace Commands
             JObject json = JObject.Parse(str);
             CreatePrimitiveCommand command = new CreatePrimitiveCommand();
             command.MeshType = json["MeshType"].Value<string>();
+            command.MaterialID = json["MaterialID"].Value<int>();
             return command;
         }
     }
