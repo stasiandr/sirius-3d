@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VRController;
 
 namespace VRCameraClickController
 {
-    public class VRCameraSelectController : MonoBehaviour
+    public class VRCameraSelectControllerRight : MonoBehaviour
     {
         public static event Action<List<Collider>> ObjectsSelected;
         private List<Collider> _selected;
@@ -18,7 +19,7 @@ namespace VRCameraClickController
 
         private void Update()
         {
-            if (OVRInput.GetDown(OVRInput.Button.PrimaryIndexTrigger))
+            if (VRController.VRController.CurrentDragger == null && OVRInput.GetDown(OVRInput.Button.SecondaryIndexTrigger))
             {
                 SphereCast();
             }

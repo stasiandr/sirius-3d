@@ -26,7 +26,8 @@ namespace SceneProvider
         public void OnEnable()
         {
             // CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
-            VRCameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
+            VRCameraSelectControllerLeft.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
+            VRCameraSelectControllerRight.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
         }
 
         private bool OverUI()
