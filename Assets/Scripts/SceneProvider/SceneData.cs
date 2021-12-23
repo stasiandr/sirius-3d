@@ -112,10 +112,10 @@ namespace SceneProvider
                 ExecutedCommands.Add(command);
             }
 
-            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z) && ExecutedCommands.Count > 0)
-            {
-                Undo();
-            }
+            //if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z) && ExecutedCommands.Count > 0)
+            //{
+            //   Undo();
+            //}
             
         }
 
