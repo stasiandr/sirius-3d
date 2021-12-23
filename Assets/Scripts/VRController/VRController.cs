@@ -108,7 +108,7 @@ namespace VRController
             
             foreach (var obj in targets)
             {
-                if (Vector3.Distance(parent.transform.position, obj.transform.position) < 0.2f)
+                if (Vector3.Distance(parent.transform.position, obj.transform.position) < 1f)
                 {
                     startPositions.Add(obj, obj.transform.position);
                     startRotations.Add(obj, obj.transform.rotation);

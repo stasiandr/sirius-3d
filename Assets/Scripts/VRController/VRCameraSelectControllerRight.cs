@@ -30,7 +30,7 @@ namespace VRCameraClickController
             RaycastHit[] sphere = Physics.SphereCastAll
             (
                 this.transform.position,
-                0.05f,
+                0.5f,
                 Vector3.forward,
                 0.0001f
             );
