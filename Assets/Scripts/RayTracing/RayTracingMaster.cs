@@ -131,14 +131,20 @@ public class RayTracingMaster : MonoBehaviour
         foreach (var key in SceneProvider.SceneData.ObjectsByID.Keys)
         {
             var obj = SceneProvider.SceneData.ObjectsByID[key];
-            Color color = Random.ColorHSV();
-            bool metal = true;//Random.value < 0.5f;
-            bool light_source = false;// Random.value < 0.3f;
+            Color color = obj.GetComponent<Renderer>().material.color;
+            bool metal = obj.GetComponent<Renderer>().material.GetFloat("_Metallic") > 0.5f;
+            Color EmColor = obj.GetComponent<Renderer>().material.GetColor("_EmissionColor");
+            print(EmColor);
+            if (metal)
+            {
+                print("metallic material");
+            }
             var obj_struct = new Object()
             {
                 albedo = metal ? Vector3.zero : new Vector3(color.r, color.g, color.b),
-                specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.04f,
-                smoothness = metal ? 1 : 0,
+                specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.02f,
+                smoothness = obj.GetComponent<Renderer>().material.GetFloat("_Glossiness"),
+                emission = new Vector3(EmColor.r, EmColor.g, EmColor.b),
                 triangles_start = triangles.Count,
                 lb = new Vector3(100000, 100000, 100000),
                 rt = new Vector3(-100000, -100000, -100000)
@@ -154,7 +160,8 @@ public class RayTracingMaster : MonoBehaviour
                     v2 = obj.transform.TransformPoint(mesh.vertices[mesh.triangles[i + 2]]),
                     albedo = metal ? Vector3.zero : new Vector3(color.r, color.g, color.b),
                     specular = metal ? new Vector3(color.r, color.g, color.b) : Vector3.one * 0.04f,
-                    smoothness = metal ? 1 : 0
+                    smoothness = obj.GetComponent<Renderer>().material.GetFloat("_Glossiness"),
+                    emission = new Vector3(EmColor.r, EmColor.g, EmColor.b)
                 };
                 obj_struct.lb.x = Mathf.Min(T.v0.x, T.v1.x, T.v2.x, obj_struct.lb.x);
                 obj_struct.lb.y = Mathf.Min(T.v0.y, T.v1.y, T.v2.y, obj_struct.lb.y);
