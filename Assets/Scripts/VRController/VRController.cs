@@ -8,7 +8,7 @@ namespace VRController
     public class VRController : MonoBehaviour
     {
         private OVRCameraRig rig;
-        private List<Vector3> startPositions = new List<Vector3>();
+        private Dictionary<GameObject, Vector3> startPositions = new Dictionary<GameObject, Vector3>();
         private List<GameObject> Target;
 
         public GameObject camera;
@@ -68,82 +68,54 @@ namespace VRController
         
         private void Drag(List<GameObject> targets)
         {
-            var grabbedTargets = new List<GameObject>();
-            
             if (OVRInput.GetDown(OVRInput.Button.PrimaryHandTrigger))
             {
-                grabbedTargets = Grab(targets, leftControllerObject);
-            }
-
-            var inputForRotation = OVRInput.Get(OVRInput.Axis2D.SecondaryThumbstick);
-            Vector3 rotationVector = new Vector3(inputForRotation.y, inputForRotation.x, 0);
-
-            if (grabbedTargets.Count != 0)
-            {
-                foreach (var target in grabbedTargets)
-                {
-                    target.transform.Rotate(rotationVector * RotationAngle * Time.deltaTime);
-                }
+                Grab(targets, leftControllerObject);
             }
 
             if (OVRInput.GetUp(OVRInput.Button.PrimaryHandTrigger))
             {
-                var endPositions = Ungrab(targets);
-
-                for (int id = 0; id < endPositions.Count; ++id)
-                {
-                    targets[id].transform.position = startPositions[id];
-                    var target = new List<GameObject> {targets[id]};
-                    
-                    SceneData.ExecutionQueue.Enqueue
-                    (
-                        new Commands.TransformCommand
-                        (
-                            target,
-                            endPositions[id] - startPositions[id]
-                        )
-                    );
-                }
-
-                startPositions = new List<Vector3>();
+                Ungrab(targets);
+                startPositions = new Dictionary<GameObject, Vector3>();
             }
         }
 
         public Material mat;
         
-        private List<GameObject> Grab(List<GameObject> targets, GameObject parent)
+        private void Grab(List<GameObject> targets, GameObject parent)
         {
-            List<GameObject> grabbed = new List<GameObject>();
-            
             foreach (var obj in targets)
             {
                 if (Vector3.Distance(leftControllerObject.transform.position, obj.transform.position) < 0.1f)
                 {
-                    startPositions.Add(obj.transform.position);
+                    startPositions.Add(obj, obj.transform.position);
                     obj.transform.parent = parent.transform;
-                    grabbed.Add(obj);
                 }
             }
-
-            return grabbed;
         }
 
-        private List<Vector3> Ungrab(List<GameObject> targets)
+        private void Ungrab(List<GameObject> targets)
         {
-            List<Vector3> endPositions = new List<Vector3>();
-
             foreach (var obj in targets.Where(obj => obj.transform.parent != null))
             {
+                List<GameObject> temp = new List<GameObject> {obj};
                 obj.transform.parent = null;
-                endPositions.Add(obj.transform.position);
+                
+                SceneData.ExecutionQueue.Enqueue
+                    (
+                    new Commands.TransformCommand
+                        (
+                            temp,
+                            obj.transform.position - startPositions[obj]
+                        )
+                    );
+
+                obj.transform.position = startPositions[obj];
             }
-            
-            return endPositions;
         }
         
         public void Update()
         {
-            mat.color = Color.magenta;
             var inputLeftThumbstick = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick);
 
             Move(inputLeftThumbstick);
