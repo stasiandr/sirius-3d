@@ -26,10 +26,16 @@ namespace SceneProvider
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
         public List<Material> _Materials;
 
+        public static GameObject create_button_prefab;
+        public static Transform buttons_scrollview_transform;
+        public GameObject _create_button_prefab;
+        public Transform _buttons_scrollview_transform;
         public void OnEnable()
         {
             Materials = _Materials;
             CurrentMaterial = 0;
+            create_button_prefab = _create_button_prefab;
+            buttons_scrollview_transform = _buttons_scrollview_transform;
             CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
         }
 
@@ -121,10 +127,10 @@ namespace SceneProvider
                 ExecutedCommands.Add(command);
             }
 
-            if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z) && ExecutedCommands.Count > 0)
-            {
-                Undo();
-            }
+            //if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z) && ExecutedCommands.Count > 0)
+            //{
+            //   Undo();
+            //}
             
         }
 

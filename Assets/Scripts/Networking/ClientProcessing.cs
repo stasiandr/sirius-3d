@@ -6,11 +6,11 @@ using SceneProvider;
 using Commands;
 using Newtonsoft.Json.Linq;
 
-public class ClientProcessing
+public class ClientProcessing : MonoBehaviour
 {
     public static Client client = new Client();
 
-    public static void ProcessMessage(string message)
+    public void ProcessMessage(string message)
     {
         Debug.Log(message);
         string commandType = JObject.Parse(message)["CommandType"].Value<string>();
@@ -37,9 +37,14 @@ public class ClientProcessing
         }
     }
 
-    public static IEnumerator Activate(string str)
+    public void Enter(string str)
     {
-        Debug.Log("HEH");
+        StartCoroutine(Activate(str));
+        gameObject.transform.position = new Vector3(1000000, 10000000, 1000000);
+    }
+
+    public IEnumerator Activate(string str)
+    {
         SceneData.HasStarted = true;
         if (str == "SinglePlayer")
         {
