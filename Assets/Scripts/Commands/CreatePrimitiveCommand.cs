@@ -37,7 +37,7 @@ namespace Commands
                     mesh = MeshGenerator.GenerateCube(/*Pos, Scale*/);
                     break;
                 case "Sphere":
-                    mesh = SphereGenerator.GenerateSphere(10, 10);
+                    mesh = SphereGenerator.GenerateSphere(20, 20);
                     break;
                 case "Cone":
                     mesh = MeshGenerator.GenerateCone(/*Height, Radius, VertexCount*/);
