@@ -9,30 +9,32 @@ namespace UIController
     {
         public void CreatePrimitiveByID(int id)
         {
+            CreatePrimitiveCommand com;
             switch(id)
             {
                 case 0:
-                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Cube"));
+                    com = new CreatePrimitiveCommand("Cube");
                     break;
                 case 1:
-                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Sphere"));
+                    com = new CreatePrimitiveCommand("Sphere");
                     break;
                 case 2:
-                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Cone"));
+                    com = new CreatePrimitiveCommand("Cone");
                     break;
                 case 3:
-                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Cylinder"));
+                    com = new CreatePrimitiveCommand("Cylinder");
                     break;
                 case 4:
-                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Torus"));
+                    com = new CreatePrimitiveCommand("Torus");
                     break;
                 case 5:
-                    SceneData.RequestQueue.Enqueue(new CreatePrimitiveCommand("Plane"));
+                    com = new CreatePrimitiveCommand("Plane");
                     break;
                 default:
                     throw new NotImplementedException();
             }
-
+            com.MaterialID = SceneData.CurrentMaterial;
+            SceneData.RequestQueue.Enqueue(com);
         }
     }
 }

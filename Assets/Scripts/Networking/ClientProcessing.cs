@@ -39,13 +39,16 @@ public class ClientProcessing : MonoBehaviour
 
     public void Enter(string str)
     {
-        StartCoroutine(Activate(str));
+        // StartCoroutine(Activate(str));
         gameObject.transform.position = new Vector3(1000000, 10000000, 1000000);
     }
 
-    public IEnumerator Activate(string str)
+    public IEnumerator Start()
     {
         SceneData.HasStarted = true;
+        string str = "192.168.80.214";
+        client = new Client();
+        
         if (str == "SinglePlayer")
         {
             SceneData.SinglePlayer = true;
@@ -55,6 +58,7 @@ public class ClientProcessing : MonoBehaviour
         {
             client.MessageReceived += ProcessMessage;
             client.Init(str);
+            client.SendRequest("HEH");
 
             yield return null;
 

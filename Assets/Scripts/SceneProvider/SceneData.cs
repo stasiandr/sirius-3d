@@ -6,6 +6,7 @@ using Commands;
 using MeshTools;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using VRCameraClickController;
 
 namespace SceneProvider
 {
@@ -15,12 +16,16 @@ namespace SceneProvider
         public static Queue<ICommand> RequestQueue = new Queue<ICommand>();
         public static List<ICommand> ExecutedCommands = new List<ICommand>();
         public static List<GameObject> Targets = new List<GameObject>();
+        public static List<Material> TargetsMaterials = new List<Material>();
         public static event Action<List<GameObject>> ObjectsSelected;
         public static Dictionary<string, MyMesh> UploadedMeshes = new Dictionary<string, MyMesh>();
         public static bool HasStarted, SinglePlayer;
+        public static int CurrentMaterial;
+        public static List<Material> Materials;
         
         static int NewObjID = 0;
         public static Dictionary<int, GameObject> ObjectsByID = new Dictionary<int, GameObject>();
+        public List<Material> _Materials;
 
         public static GameObject create_button_prefab;
         public static Transform buttons_scrollview_transform;
@@ -28,9 +33,13 @@ namespace SceneProvider
         public Transform _buttons_scrollview_transform;
         public void OnEnable()
         {
-            create_button_prefab = _create_button_prefab;
-            buttons_scrollview_transform = _buttons_scrollview_transform;
-            CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
+            // CameraSelectController.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
+            VRCameraSelectControllerLeft.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
+            VRCameraSelectControllerRight.ObjectsSelected += CameraSelectControllerOnObjectsSelected;
+            // create_button_prefab = _create_button_prefab;
+            // buttons_scrollview_transform = _buttons_scrollview_transform;
+            Materials = _Materials;
+            CurrentMaterial = 0;
         }
 
         private bool OverUI()
@@ -44,12 +53,14 @@ namespace SceneProvider
             {
                 return;
             }
-
-            foreach (var target in Targets.Where(target => target != null))
-            {
-                target.GetComponent<MeshRenderer>().sharedMaterial = defaultMaterial;
+            if (Targets != null){
+                for (int i = 0; i < Targets.Count; ++i)
+                {
+                    Targets[i].GetComponent<MeshRenderer>().sharedMaterial = TargetsMaterials[i];
+                }
             }
             Targets = new List<GameObject>();
+            TargetsMaterials = new List<Material>();
             if (obj == null)
             {
                 ObjectsSelected?.Invoke(Targets);
@@ -58,6 +69,7 @@ namespace SceneProvider
             foreach (var col in obj.Where(col => col != null))
             {
                 Targets.Add(col.gameObject);
+                TargetsMaterials.Add(col.gameObject.GetComponent<Renderer>().material);
             }
 
             foreach (var target in Targets)
@@ -82,9 +94,9 @@ namespace SceneProvider
             Targets = new List<GameObject>();
             NewObjID = 0;
             ObjectsByID = new Dictionary<int, GameObject>();
-            HasStarted = false;
+            // HasStarted = false;
             SinglePlayer = false;
-            ClientProcessing.client = new Core.Scripts.Networking.Client();
+            // ClientProcessing.client = new Core.Scripts.Networking.Client();
         }
 
         public void Update()
@@ -93,10 +105,10 @@ namespace SceneProvider
             {
                 return;
             }
-            if (Input.GetKeyDown(KeyCode.Delete))
-            {
-                RequestQueue.Enqueue(new DeleteCommand(Targets));
-            }
+            // if (Input.GetKeyDown(KeyCode.Delete))
+            // {
+            //     RequestQueue.Enqueue(new DeleteCommand(Targets));
+            // }
 
             if (RequestQueue.Count > 0)
             {
@@ -132,7 +144,7 @@ namespace SceneProvider
             ExecutedCommands.RemoveAt(ExecutedCommands.Count - 1);
         }
 
-        public static int CreateMesh(MyMesh mesh)
+        public static int CreateMesh(MyMesh mesh, int MatID = 0)
         {
             var go = new GameObject
             {
@@ -145,7 +157,7 @@ namespace SceneProvider
 
             var meshCollider = go.AddComponent<MeshCollider>();
 
-            go.AddComponent<MeshRenderer>().sharedMaterial = _instance.defaultMaterial;
+            go.AddComponent<MeshRenderer>().sharedMaterial = Materials[MatID];
             ObjectsByID[NewObjID] = go;
             NewObjID++;
             return NewObjID - 1;
